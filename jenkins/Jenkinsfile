@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    options {
+        skipDefaultCheckout()
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git(
+                    url: 'git@github.com:gitwood8/jenkins-deploy-app.git',
+                    credentialsId: 'github-ssh-key',
+                    branch: 'main'
+                )
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh '''
+                    echo '------Build Started------'
+                    hostname && pwd && whoami
+                    # && sudo chmod 777 ./*
+                    ls -la
+                    cat index.html
+                    echo "Build by jenkins Build# $BUILD_ID" >> index.html
+                    cat index.html
+                    echo '------Build Finished------'
+                '''
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh '''
+                    echo '------Test Started------'
+                    result=$(grep "Hello" index.html | wc -l)
+                    echo $result
+                    if [ "$result" = "1" ]; then
+                        echo "Test passed"
+                    else
+                        echo "Test failed"
+                        exit 1
+                    fi
+                    echo '------Test Finished------'
+                '''
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                script {
+                    def sshPublisher = addInteractivePromotionPublisher()
+                    sshPublisher.setTransfers([
+                        sshTransfer(remote: '', sourceFiles: 'index.html', execCommand: 'sudo service httpd restart')
+                    ])
+                }
+            }
+        }
+    }
+}
+
+def addInteractivePromotionPublisher() {
+    return addInteractivePromotionPublisherToBuildStep(delegate: publishOverSSHPlugin()) {
+        publishers {
+            sshPublisher {
+                transfers {
+                    sshTransfer()
+                }
+            }
+        }
+    }
+}
+
+def publishOverSSHPlugin() {
+    return Jenkins.instance.getPlugin('publish-over-ssh@1.24')
+}
