@@ -53,8 +53,8 @@ pipeline {
         stage('Transfer Files') {
             steps {
                 publishOverSsh(server: 'awsaws', 
-                                site: '/var/www/html',
-                                targetDirectory: '',
+                                //site: '/var/www/html',
+                                //targetDirectory: '',
                                 transfers: [
                                    // Transfer the file '1234index.html' to the remote server
                                     [sourceFiles: 'index.html', 
@@ -63,17 +63,17 @@ pipeline {
             }
         }
 
-        stage('Restart httpd') {
+        stage('Restart webserver') {
             steps {
                 sshPublisher(
-                    continueOnError: true,
-                    failOnError: true,
+                    //continueOnError: true,
+                    //failOnError: true,
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'my-ssh-server',
+                            configName: 'awsaws',
                             transfers: [
                                 sshTransfer(
-                                    execCommand: 'sudo service httpd restart'
+                                    execCommand: 'sudo systemctl restart httpd'
                                 )
                             ]
                         )
