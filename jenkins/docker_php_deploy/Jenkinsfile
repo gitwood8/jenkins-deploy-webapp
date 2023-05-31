@@ -46,7 +46,7 @@ pipeline {
                                     //the same directory structure as in the source directory during the file transfer
                                     flatten: false,
                                     remoteDirectory: '/home/ec2-user/qwe/',
-                                    sourceFiles: '*'
+                                    sourceFiles: '/jenkins/docker_php_deploy/*'
                                     )
                                 ]
                             )
@@ -80,7 +80,7 @@ pipeline {
                             configName: 'awsaws',
                             transfers: [
                                 sshTransfer(
-                                    execCommand: 'ls -la'
+                                    execCommand: 'echo "$(ls -la)"'
 //                                   '''
 //                                   ls -la
 //                                   docker build -t ${env.CI_IMAGE_NAME} .
