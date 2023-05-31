@@ -1,12 +1,12 @@
-/*-------------------------------------------------------------------#
-#  Jenkins running on remote EC2 AWS instance, remote webserver too  #
-#  Need to install ssh pluginsn                                      #
-#  In jenkins configuration need to add remote server and ssh key    #
-#  Its better to set "/" directory and define declaratively          #
-#  Create new pipeline, choose SCM using https                       #
-#  Select "Script path" in git repo                                  #
-#  Update date:        31.05.2023                                    #
-#-------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------#
+#  Jenkins running on remote EC2 AWS instance, remote webserver too      #
+#  Need to install ssh plugins                                           #
+#  Edit jenkins configuration to add remote server and ssh key           #
+#  Its better to set "/" directory and define declaratively              #
+#  Create new pipeline, choose SCM using https                           #
+#  Select "Script path" in git repo /jenkins/webpage_deploy/Jenkinsfile  #
+#  Update date:        31.05.2023                                        #
+#-----------------------------------------------------------------------*/
 pipeline {
     agent any
 
@@ -102,34 +102,3 @@ pipeline {
         }
     }
 }
-
-/*
-        stage('Publish') {
-            steps {
-                script {
-                    def sshPublisher = addInteractivePromotionPublisher()
-                    sshPublisher.setTransfers([
-                        sshTransfer(remote: '', sourceFiles: 'index.html', execCommand: 'sudo service httpd restart')
-                    ])
-                }
-            }
-        }
-    }
-}
-
-def addInteractivePromotionPublisher() {
-    return addInteractivePromotionPublisherToBuildStep(delegate: publishOverSSHPlugin()) {
-        publishers {
-            sshPublisher {
-                transfers {
-                    sshTransfer()
-                }
-            }
-        }
-    }
-}
-
-def publishOverSSHPlugin() {
-    return Jenkins.instance.getPlugin('publish-over-ssh@1.24')
-}
-*/
