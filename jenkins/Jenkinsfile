@@ -10,8 +10,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 git(
-                    //url: 'git@github.com:gitwood8/jenkins-deploy-app.git',
                     url: 'https://github.com/gitwood8/jenkins-deploy-app.git',
+                    //url: 'git@github.com:gitwood8/jenkins-deploy-app.git',
                     //credentialsId: 'github-ssh-key',
                     branch: 'main'
                 )
@@ -49,38 +49,31 @@ pipeline {
                 '''
             }
         }
-/*
+
         stage('Transfer files') {
             steps {
                 echo '------Starting publish over SSH------'
-                publishOverSsh(
-                    server: 'awsaws', 
-                                //site: '/var/www/html',
-                                //targetDirectory: '',
-                    transfers: [
-                                    [sourceFiles: 'index.html', 
-                                    targetLocation: '/var/www/html']
-                                ])
-                echo '------Finished publish over SSH------'
-            }
-        }
-*/
-        stage('Transfer files') {
-            steps {
-                echo '------Starting publish over SSH------'
-                sshPublisher(publishers: [sshPublisherDesc(configName: 'awsaws',
-                    transfers: [sshTransfer(
-                            flatten: false,
-                            remoteDirectory: '/var/www/html',
-                            sourceFiles: 'index.html'
-                        )])])
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'awsaws',
+                            transfers: [
+                                sshTransfer(
+                                    flatten: false,
+                                    remoteDirectory: '/var/www/html',
+                                    sourceFiles: 'index.html'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
                 echo '------Finished publish over SSH------'
             }
         }
 
         stage('Restart webserver') {
             steps {
-                echo '------Starting restart webserver------'
+                echo '------Restart webserver------'
                 sshPublisher(
                     //continueOnError: true,
                     //failOnError: true,
@@ -95,7 +88,7 @@ pipeline {
                         )
                     ]
                 )
-                echo '------Starting restart webserver------'
+                echo '------Webserver restarted------'
             }
         }
     }
