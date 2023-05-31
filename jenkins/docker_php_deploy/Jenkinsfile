@@ -46,7 +46,7 @@ pipeline {
                                     //the same directory structure as in the source directory during the file transfer
                                //     flatten: false,
                                     remoteDirectory: '/home/ec2-user/qwe/',
-                                    sourceFiles: '/docker_php_deploy/*'
+                                    sourceFiles: 'enkins/docker_php_deploy/**'
                                     )
                                 ]
                             )
