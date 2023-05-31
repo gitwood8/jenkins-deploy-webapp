@@ -59,7 +59,7 @@ pipeline {
                             configName: 'awsaws',
                             transfers: [
                                 sshTransfer(
-                                    flatten: false,
+                                    //flatten: false,
                                     remoteDirectory: '/var/www/html',
                                     sourceFiles: 'index.html'
                                     )
