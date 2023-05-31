@@ -46,7 +46,7 @@ pipeline {
                                     //the same directory structure as in the source directory during the file transfer
                                //     flatten: false,
                                     remoteDirectory: '/home/ec2-user/qwe/',
-                                    sourceFiles: '*'
+                                    sourceFiles: '/jenkins/*'
                                     )
                                 ]
                             )
@@ -80,7 +80,7 @@ pipeline {
                             configName: 'awsaws',
                             transfers: [
                                 sshTransfer(
-                                    execCommand: 'touch /home/ec2-user/jopaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt'
+                                    execCommand: 'touch /home/ec2-user/jopaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt; touch /home/ec2-user/jDEDMOROZZZZZZZZZZZZZZZZZZZz.txt'
 //                                   '''
 //                                   ls -la
 //                                   docker build -t ${env.CI_IMAGE_NAME} .
@@ -94,9 +94,8 @@ pipeline {
                         )
                     ]
                 )
-                sh 'ls -la'
+// This commands executes on jenkins host
                 sh 'cat /etc/os-release'
-                sh 'pwd'
                 echo '------Container work done------'
             }
         }
