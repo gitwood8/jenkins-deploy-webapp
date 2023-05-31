@@ -46,7 +46,7 @@ pipeline {
                                     //the same directory structure as in the source directory during the file transfer
                                //     flatten: false,
                                     remoteDirectory: '/home/ec2-user/qwe/',
-                                    sourceFiles: './jenkins/docker_php_deploy/*'
+                                    sourceFiles: '/docker_php_deploy/*'
                                     )
                                 ]
                             )
@@ -92,7 +92,7 @@ pipeline {
                     ]
                 )
 // This commands executes on jenkins host
-                sh 'cat /etc/os-release'
+//                sh 'cat /etc/os-release'
                 echo '------Container work done------'
             }
         }
