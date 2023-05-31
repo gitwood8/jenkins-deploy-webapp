@@ -47,7 +47,7 @@ pipeline {
                                 //    flatten: false,
                                     remoteDirectory: '/home/ec2-user/qwe/',
                                     sourceFiles: 'jenkins/docker_php_deploy/*',
-                                    excludeFiles: 'jenkins/docker_php_deploy/git-scr',
+                                    excludeFiles: 'jenkins/docker_php_deploy/git-scr*',
                                     removePrefix: 'jenkins/docker_php_deploy/'
                                     )
                                 ]
