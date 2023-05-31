@@ -44,7 +44,7 @@ pipeline {
                             transfers: [
                                 sshTransfer(
                                     //the same directory structure as in the source directory during the file transfer
-                                    flatten: false,
+                               //     flatten: false,
                                     remoteDirectory: '/home/ec2-user/qwe/',
                                     sourceFiles: '*'
                                     )
@@ -95,6 +95,8 @@ pipeline {
                     ]
                 )
                 sh 'ls -la'
+                sh 'cat /etc/os-release'
+                sh 'pwd'
                 echo '------Container work done------'
             }
         }
