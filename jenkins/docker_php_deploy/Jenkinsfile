@@ -4,12 +4,20 @@
 #  Edit jenkins configuration to add remote server and ssh key              #
 #  Its better to set "/" directory and define declaratively                 #
 #  Create new pipeline, choose SCM using https                              #
+#                                                                           #
 #  Select "Script path" in git repo /jenkins/docker_php_deploy/Jenkinsfile  #
 #                                                                           #
 #  Update date:        31.05.2023                                           #
 #--------------------------------------------------------------------------*/
 pipeline {
     agent any
+    environment {
+        CI_IMAGE_NAME = 'web_container',
+        CI_CONTAINER_NAME = 'test_container',
+        CONTAINER_EXTERNAL_PORT = '8080',
+        CD_IMAGE_REPO_USER = 'wood8',
+        CD_IMAGE_NAME_VERSION = 'jenkins-cicd'
+    }
 
     options {
         skipDefaultCheckout()
@@ -21,8 +29,6 @@ pipeline {
             steps {
                 git(
                     url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
-                    //url: 'git@github.com:gitwood8/jenkins-deploy-app.git',
-                    //credentialsId: 'github-ssh-key',
                     branch: 'main'
                 )
             }
@@ -30,16 +36,12 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh '''
-                    echo '------Build Started------'
-                    hostname && pwd && whoami
-                    # && sudo chmod 777 ./*
-                    ls -la
-                    cat index.html
-                    echo "Build by jenkins Build# $BUILD_ID" >> index.html
-                    cat index.html
-                    echo '------Build Finished------'
-                '''
+                script {
+                    sh "docker build -t env.CI_IMAGE_NAME"
+                    sh "docker run -d --name env.CI_CONTAINER_NAME -p env.CONTAINER_EXTERNAL_PORT:80 env.CI_IMAGE_NAME"
+                    sh "sleep 15"
+                    sh "docker inspect --format='{{json .State.Health}}' $(docker ps -q) | grep '\"Status\":\"healthy\"'"
+                }
             }
         }
 
@@ -60,46 +62,46 @@ pipeline {
             }
         }
 
-        stage('Transfer files') {
-            steps {
-                echo '------Starting publish over SSH------'
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'awsaws',
-                            transfers: [
-                                sshTransfer(
-                                    flatten: false,
-                                    remoteDirectory: '/var/www/html',
-                                    sourceFiles: 'index.html'
-                                    )
-                                ]
-                            )
-                        ]
-                    )
-                echo '------Finished publish over SSH------'
-            }
-        }
-
-        stage('Restart webserver') {
-            steps {
-                echo '------Restart webserver------'
-                sshPublisher(
-                    //continueOnError: true,
-                    //failOnError: true,
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'awsaws',
-                            transfers: [
-                                sshTransfer(
-                                    execCommand: 'sudo systemctl restart httpd'
-                                )
-                            ]
-                        )
-                    ]
-                )
-                echo '------Webserver restarted------'
-            }
-        }
+//        stage('Transfer files') {
+//            steps {
+//                echo '------Starting publish over SSH------'
+//                sshPublisher(
+//                    publishers: [
+//                        sshPublisherDesc(
+//                            configName: 'awsaws',
+//                            transfers: [
+//                                sshTransfer(
+//                                    flatten: false,
+//                                    remoteDirectory: '/var/www/html',
+//                                    sourceFiles: 'index.html'
+//                                    )
+//                                ]
+//                            )
+//                        ]
+//                    )
+//                echo '------Finished publish over SSH------'
+//            }
+//        }
+//
+//        stage('Restart webserver') {
+//            steps {
+//                echo '------Restart webserver------'
+//                sshPublisher(
+//                    //continueOnError: true,
+//                    //failOnError: true,
+//                    publishers: [
+//                        sshPublisherDesc(
+//                            configName: 'awsaws',
+//                            transfers: [
+//                                sshTransfer(
+//                                    execCommand: 'sudo systemctl restart httpd'
+//                                )
+//                            ]
+//                        )
+//                    ]
+//                )
+//                echo '------Webserver restarted------'
+//            }
+//        }
     }
 }
