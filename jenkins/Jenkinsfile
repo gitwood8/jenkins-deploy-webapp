@@ -61,3 +61,19 @@ pipeline {
         }
     }
 }
+
+def addInteractivePromotionPublisher() {
+    return addInteractivePromotionPublisherToBuildStep(delegate: publishOverSSHPlugin()) {
+        publishers {
+            sshPublisher {
+                transfers {
+                    sshTransfer()
+                }
+            }
+        }
+    }
+}
+
+def publishOverSSHPlugin() {
+    return Jenkins.instance.getPlugin('publish-over-ssh@1.24')
+}
