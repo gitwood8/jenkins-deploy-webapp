@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+echo -e "\n Previous commit comment: $(git log -1 --pretty=%B)\n"
 read -p "Enter a comment for commit: " COM
 read -p "Ready to Commit and Push with comment: '$COM'? y/n: " ANS
 if [ $ANS == "y" ] 

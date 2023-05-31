@@ -3,6 +3,7 @@ pipeline {
 
     options {
         skipDefaultCheckout()
+        timestamps()
     }
 
     stages {
@@ -49,6 +50,39 @@ pipeline {
             }
         }
 
+        stage('Transfer Files') {
+            steps {
+                publishOverSsh(server: 'awsaws', 
+                                site: '/var/www/html',
+                                targetDirectory: '',
+                                transfers: [
+                                   // Transfer the file '1234index.html' to the remote server
+                                    [sourceFiles: 'index.html', 
+                                    targetLocation: '/var/www/html']
+                                ])
+            }
+        }
+
+        stage('Restart httpd') {
+            steps {
+                sshPublisher(
+                    continueOnError: true,
+                    failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'my-ssh-server',
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: 'sudo service httpd restart'
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+        }
+
+/*
         stage('Publish') {
             steps {
                 script {
@@ -77,3 +111,4 @@ def addInteractivePromotionPublisher() {
 def publishOverSSHPlugin() {
     return Jenkins.instance.getPlugin('publish-over-ssh@1.24')
 }
+*/
