@@ -92,7 +92,7 @@ pipeline {
                         )
                     ]
                 )
-                echo '------Webserver restarted------'
+                echo '------Container work done------'
             }
         }
     }
