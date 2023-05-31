@@ -80,7 +80,7 @@ pipeline {
                             configName: 'awsaws',
                             transfers: [
                                 sshTransfer(
-                                    execCommand: 'echo qwerty'
+                                    execCommand: 'touch /home/ec2-user/jopaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt'
 //                                   '''
 //                                   ls -la
 //                                   docker build -t ${env.CI_IMAGE_NAME} .
