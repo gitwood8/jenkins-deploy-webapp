@@ -37,10 +37,10 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh "docker build -t env.CI_IMAGE_NAME"
-                    sh "docker run -d --name env.CI_CONTAINER_NAME -p env.CONTAINER_EXTERNAL_PORT:80 env.CI_IMAGE_NAME"
-                    sh "sleep 15"
-                    sh "docker inspect --format='{{json .State.Health}}' $(docker ps -q) | grep '\"Status\":\"healthy\"'"
+                    sh 'docker build -t env.CI_IMAGE_NAME'
+                    sh "docker run -d --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${CI_IMAGE_NAME}"
+                    sh 'sleep 15'
+                    sh 'docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'"
                 }
             }
         }
