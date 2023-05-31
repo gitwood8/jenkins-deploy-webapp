@@ -4,11 +4,9 @@ read -p "Enter a comment for commit: " COM && echo ""
 read -p "Ready to Commit and Push with comment: '$COM'? y/n: " ANS && echo ""
 if [ $ANS == "y" ] 
 then
-    git add .
+    git add ~/jenkins/jenkins-deploy-app
     git commit -m "$COM"
     git push
-    exit 0
 else
     echo "Aborted" && echo ""
-    exit 1
 fi

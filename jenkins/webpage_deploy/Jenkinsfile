@@ -5,6 +5,7 @@
 #  Its better to set "/" directory and define declaratively              #
 #  Create new pipeline, choose SCM using https                           #
 #  Select "Script path" in git repo /jenkins/webpage_deploy/Jenkinsfile  #
+#                                                                        #
 #  Update date:        31.05.2023                                        #
 #-----------------------------------------------------------------------*/
 pipeline {
