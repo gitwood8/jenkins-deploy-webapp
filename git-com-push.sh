@@ -6,7 +6,6 @@ then
     git add .
     git commit -m "$COM"
     git push
-#    echo "Nice"
     exit 0
 else
     echo "Aborted"
