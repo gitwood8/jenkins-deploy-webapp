@@ -46,7 +46,8 @@ pipeline {
                                     //the same directory structure as in the source directory during the file transfer
                                 //    flatten: false,
                                     remoteDirectory: '/home/ec2-user/qwe/',
-                                    sourceFiles: '/jenkins/docker_php_deploy/index.php, /jenkins/docker_php_deploy/Dockerfile '
+                                    sourceFiles: 'jenkins/docker_php_deploy/*'
+                                    removePrefix: 'jenkins/docker_php_deploy/'
                                     )
                                 ]
                             )
