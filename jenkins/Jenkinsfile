@@ -52,6 +52,7 @@ pipeline {
 
         stage('Transfer Files') {
             steps {
+                echo '------Starting publish over SSH------'
                 publishOverSsh(server: 'awsaws', 
                                 //site: '/var/www/html',
                                 //targetDirectory: '',
@@ -60,11 +61,13 @@ pipeline {
                                     [sourceFiles: 'index.html', 
                                     targetLocation: '/var/www/html']
                                 ])
+                echo '------Finished publish over SSH------'
             }
         }
 
         stage('Restart webserver') {
             steps {
+                echo '------Starting restart webserver------'
                 sshPublisher(
                     //continueOnError: true,
                     //failOnError: true,
@@ -79,6 +82,7 @@ pipeline {
                         )
                     ]
                 )
+                echo '------Starting restart webserver------'
             }
         }
     }
