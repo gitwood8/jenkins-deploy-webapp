@@ -1,3 +1,12 @@
+/*-------------------------------------------------------------------#
+#  Jenkins running on remote EC2 AWS instance, remote webserver too  #
+#  Need to install ssh pluginsn                                      #
+#  In jenkins configuration need to add remote server and ssh key    #
+#  Its better to set "/" directory and define declaratively          #
+#  Create new pipeline, choose SCM using https                       #
+#  Select "Script path" in git repo                                  #
+#  Update date:        31.05.2023                                    #
+#-------------------------------------------------------------------*/
 pipeline {
     agent any
 
@@ -10,7 +19,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git(
-                    url: 'https://github.com/gitwood8/jenkins-deploy-app.git',
+                    url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
                     //url: 'git@github.com:gitwood8/jenkins-deploy-app.git',
                     //credentialsId: 'github-ssh-key',
                     branch: 'main'
