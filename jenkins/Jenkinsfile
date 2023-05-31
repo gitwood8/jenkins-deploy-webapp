@@ -68,15 +68,11 @@ pipeline {
         stage('Transfer files') {
             steps {
                 echo '------Starting publish over SSH------'
-                publishOverSsh(
-                    serverName: 'awsaws',
-                    transfers: [
-                        publishOverSshTransfer(
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'awsaws',
+                    transfers: [sshTransfer(flatten: false,
+                            remoteDirectory: '/var/www/html'
                             sourceFiles: 'index.html',
-                            targetLocation: '/var/www/html'
-                        )
-                    ]
-                )
+                        )])])
                 echo '------Finished publish over SSH------'
             }
         }
