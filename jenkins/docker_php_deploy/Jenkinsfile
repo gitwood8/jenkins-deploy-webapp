@@ -94,7 +94,7 @@ pipeline {
                         )
                     ]
                 )
-                echo ' $(ls -la)'
+                sh 'ls -la'
                 echo '------Container work done------'
             }
         }
