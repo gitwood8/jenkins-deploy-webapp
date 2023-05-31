@@ -80,12 +80,12 @@ pipeline {
                             configName: 'awsaws',
                             transfers: [
                                 sshTransfer(
-                                    execCommand: 'ls -la; 
-                                    docker build -t ${env.CI_IMAGE_NAME} .; 
-                                    docker run -d --name ${env.CI_CONTAINER_NAME} -p ${env.CONTAINER_EXTERNAL_PORT}:80 ${env.CI_IMAGE_NAME}; 
-                                    sleep 15; 
-                                    docker inspect --format='{{json .State.Health}}' $(docker ps -q) | grep "Status":"healthy"; 
-                                    echo "docker ps" && docker images" '
+                                    execCommand: '''ls -la; \
+                                    docker build -t ${env.CI_IMAGE_NAME} .; \
+                                    docker run -d --name ${env.CI_CONTAINER_NAME} -p ${env.CONTAINER_EXTERNAL_PORT}:80 ${env.CI_IMAGE_NAME}; \
+                                    sleep 15; \
+                                    docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep "Status":"healthy"; \
+                                    echo "$(docker ps)" && echo "$(docker images)" '''
                                 )
                             ]
                         )
