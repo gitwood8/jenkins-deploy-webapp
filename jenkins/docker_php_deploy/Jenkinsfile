@@ -45,7 +45,7 @@ pipeline {
                                 sshTransfer(
                                     //the same directory structure as in the source directory during the file transfer
                                     flatten: false,
-                                    remoteDirectory: '~/qwe/',
+                                    remoteDirectory: '/home/ec2-user/qwe/',
                                     sourceFiles: '*'
                                     )
                                 ]
