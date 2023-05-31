@@ -49,18 +49,34 @@ pipeline {
                 '''
             }
         }
-
+/*
         stage('Transfer files') {
             steps {
                 echo '------Starting publish over SSH------'
-                publishOverSsh(server: 'awsaws', 
+                publishOverSsh(
+                    server: 'awsaws', 
                                 //site: '/var/www/html',
                                 //targetDirectory: '',
-                                transfers: [
-                                   // Transfer the file '1234index.html' to the remote server
+                    transfers: [
                                     [sourceFiles: 'index.html', 
                                     targetLocation: '/var/www/html']
                                 ])
+                echo '------Finished publish over SSH------'
+            }
+        }
+*/
+        stage('Transfer files') {
+            steps {
+                echo '------Starting publish over SSH------'
+                publishOverSsh(
+                    serverName: 'awsaws',
+                    transfers: [
+                        publishOverSshTransfer(
+                            sourceFiles: 'index.html',
+                            targetLocation: '/var/www/html'
+                        )
+                    ]
+                )
                 echo '------Finished publish over SSH------'
             }
         }
