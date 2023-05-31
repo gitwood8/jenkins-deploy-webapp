@@ -1,0 +1,105 @@
+/*--------------------------------------------------------------------------#
+#  Jenkins running on remote EC2 AWS instance, remote webserver too         #
+#  Need to install ssh plugins                                              #
+#  Edit jenkins configuration to add remote server and ssh key              #
+#  Its better to set "/" directory and define declaratively                 #
+#  Create new pipeline, choose SCM using https                              #
+#  Select "Script path" in git repo /jenkins/docker_php_deploy/Jenkinsfile  #
+#                                                                           #
+#  Update date:        31.05.2023                                           #
+#--------------------------------------------------------------------------*/
+pipeline {
+    agent any
+
+    options {
+        skipDefaultCheckout()
+        timestamps()
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git(
+                    url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
+                    //url: 'git@github.com:gitwood8/jenkins-deploy-app.git',
+                    //credentialsId: 'github-ssh-key',
+                    branch: 'main'
+                )
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh '''
+                    echo '------Build Started------'
+                    hostname && pwd && whoami
+                    # && sudo chmod 777 ./*
+                    ls -la
+                    cat index.html
+                    echo "Build by jenkins Build# $BUILD_ID" >> index.html
+                    cat index.html
+                    echo '------Build Finished------'
+                '''
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh '''
+                    echo '------Test Started------'
+                    result=$(grep "Hello" index.html | wc -l)
+                    echo $result
+                    if [ "$result" = "1" ]; then
+                        echo "Test passed"
+                    else
+                        echo "Test failed"
+                        exit 1
+                    fi
+                    echo '------Test Finished------'
+                '''
+            }
+        }
+
+        stage('Transfer files') {
+            steps {
+                echo '------Starting publish over SSH------'
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'awsaws',
+                            transfers: [
+                                sshTransfer(
+                                    flatten: false,
+                                    remoteDirectory: '/var/www/html',
+                                    sourceFiles: 'index.html'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                echo '------Finished publish over SSH------'
+            }
+        }
+
+        stage('Restart webserver') {
+            steps {
+                echo '------Restart webserver------'
+                sshPublisher(
+                    //continueOnError: true,
+                    //failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'awsaws',
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: 'sudo systemctl restart httpd'
+                                )
+                            ]
+                        )
+                    ]
+                )
+                echo '------Webserver restarted------'
+            }
+        }
+    }
+}
