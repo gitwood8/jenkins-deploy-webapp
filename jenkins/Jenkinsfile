@@ -50,7 +50,7 @@ pipeline {
             }
         }
 
-        stage('Transfer Files') {
+        stage('Transfer files') {
             steps {
                 echo '------Starting publish over SSH------'
                 publishOverSsh(server: 'awsaws', 
