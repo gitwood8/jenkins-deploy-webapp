@@ -38,10 +38,7 @@ pipeline {
             steps {
                 git(
                     url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
-                    branch: 'main',
-                    includes: 'jenkins/docker_php_deploy/*',
-                    excludes: 'jenkins/docker_php_deploy/git-scr',
-                    removePrefix: 'jenkins/docker_php_deploy/'
+                    branch: 'main'
                 )
             }
         }
