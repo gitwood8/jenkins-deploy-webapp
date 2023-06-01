@@ -68,7 +68,7 @@ pipeline {
                     sh "docker ps -qa | xargs docker stop"
                     // we`ve got "--rm" in container run command
                     //sh "docker ps -qa | xargs docker rm"
-                    sh "docker images -qa | xargs docker rmi -f"
+                    sh "docker images -qa | xargs docker image prune --force"
                  //   sh "for i in \$(docker ps -qa); do docker stop $i; docker rm $i; done"
                  //   sh "for i in \$(docker images -qa); do docker rmi $i; done"
                 }
