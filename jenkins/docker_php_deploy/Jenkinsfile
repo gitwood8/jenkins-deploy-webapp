@@ -66,7 +66,7 @@ pipeline {
                     sleep 10
                     sh 'docker ps -qa | xargs docker stop'
                     //sh "for i in \$(docker images -qa); do docker rmi \$i 2>/dev/null; done"
-                    sh 'docker images -qa | xargs docker rmi 2>/dev/null'
+                    sh 'docker images -q | xargs docker rmi 2>/dev/null'
                 }
             }
         }
