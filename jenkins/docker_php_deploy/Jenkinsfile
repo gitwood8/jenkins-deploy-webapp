@@ -48,7 +48,7 @@ pipeline {
 //                dir('jenkins/docker_php_deploy/') {
 //                    sh "ls -la"
 //                    sh "pwd"
-//                } 
+//                }
 //                    //dir inside workspace on slave
 //                    sh "ls -la"
 //                    sh "pwd"
@@ -62,12 +62,10 @@ pipeline {
                     sh "docker run -d --rm --name ${env.CI_CONTAINER_NAME} -p ${env.CONTAINER_EXTERNAL_PORT}:80 ${env.CI_IMAGE_NAME}"
                     sleep 20
                     sh "docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'"
-                    sh "docker ps && docker images"
-                    sh "curl ifconfig.me"
+                    sh 'docker ps && docker images'
+                    sh 'curl ifconfig.me'
                     sleep 10
-                    sh "docker ps -qa | xargs docker stop"
-                 //   sh "docker images -qa | xargs docker image prune --force"
-                 //   sh "for i in \$(docker ps -qa); do docker stop $i; docker rm $i; done"
+                    sh 'docker ps -qa | xargs docker stop'
                     sh "for i in \$(docker images -qa); do docker rmi $i 2>/dev/null; done"
                 }
             }
