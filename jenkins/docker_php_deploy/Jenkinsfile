@@ -65,10 +65,10 @@ pipeline {
                     sh "docker ps && docker images"
                     sh "curl ifconfig.me"
                     sleep 10
-                 //   sh "docker ps -qa | xargs docker stop"
+                    sh "docker ps -qa | xargs docker stop"
                  //   sh "docker images -qa | xargs docker image prune --force"
                  //   sh "for i in \$(docker ps -qa); do docker stop $i; docker rm $i; done"
-                    sh "for i in \$(docker images -qa); do docker rmi $i; 2>/dev/null; done"
+                    sh "for i in \$(docker images -qa); do docker rmi $i 2>/dev/null; done"
                 }
             }
         }
