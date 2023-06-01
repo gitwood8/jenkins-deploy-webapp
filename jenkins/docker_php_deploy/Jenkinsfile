@@ -20,7 +20,6 @@ pipeline {
 
         CD_IMAGE_REPO_USER = 'wood8'
         CD_IMAGE_REPO_NAME = 'jenkins-webserver'
-        MY_GIT_COMMIT_HASH = '${GIT_COMMIT}'
     }
 
     options {
@@ -48,7 +47,7 @@ pipeline {
         stage('Build docker image') {
             steps {
                 dir('jenkins/docker_php_deploy/docker/') {
-                    sh "docker build -t ${env.CD_IMAGE_REPO_USER}/${env.CD_IMAGE_REPO_NAME}:${env.MY_GIT_COMMIT_HASH} ."
+                    sh "docker build -t ${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT} ."
                 }
             }
         }
