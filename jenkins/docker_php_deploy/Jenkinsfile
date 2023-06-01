@@ -24,15 +24,15 @@ pipeline {
         timestamps()
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git(
-                    url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
-                    branch: 'main'
-                )
-            }
-        }
+//    stages {
+//        stage('Checkout') {
+//            steps {
+//                git(
+//                    url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
+//                    branch: 'main'
+//                )
+//            }
+//        }
 
         stage('Delete workspace before build starts') {
             steps {
