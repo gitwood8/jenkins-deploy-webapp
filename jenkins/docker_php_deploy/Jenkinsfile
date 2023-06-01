@@ -35,17 +35,18 @@ pipeline {
             }
         }
 
-//        stage('Checkout') {
-//            steps {
-//                script {
-//                    git(
-//                        url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
-//                        branch: 'main'
-//                    )
-//                    env.GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=5 HEAD').trim()
-//                }
-//            }
-//        }
+// Без этого степа создаются директории но не скачиваются файлы
+        stage('Checkout') {
+            steps {
+                script {
+                    git(
+                        url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
+                        branch: 'main'
+                    )
+                    env.GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=5 HEAD').trim()
+                }
+            }
+        }
 
         stage('Build docker image') {
             steps {
