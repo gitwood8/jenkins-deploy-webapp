@@ -25,21 +25,21 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git(
-                    url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
-                    branch: 'main'
-                )
-            }
-        }
-
         stage('Delete workspace before build starts') {
             steps {
                 echo 'Deleting workspace dir'
                 deleteDir()
                 sh 'ls -la'
                 sh 'pwd'
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git(
+                    url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
+                    branch: 'main'
+                )
             }
         }
 
