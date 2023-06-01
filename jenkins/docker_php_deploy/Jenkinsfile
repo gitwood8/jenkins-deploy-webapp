@@ -4,10 +4,12 @@
 #  Edit jenkins configuration to add remote server and ssh key              #
 #  Its better to set "/" directory and define declaratively                 #
 #  Create new pipeline, choose SCM using https                              #
+#  Configure 1 slave (ubuntu), add ssh keys and go                          #
+#  Here i just test my image on remote jenkins slave                        #
 #                                                                           #
 #  Select "Script path" in git repo /jenkins/docker_php_deploy/Jenkinsfile  #
 #                                                                           #
-#  Update date:        01.06.2023                                           #
+#  Last update:        01.06.2023                                           #
 #--------------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
@@ -29,8 +31,6 @@ pipeline {
             steps {
                 echo 'Deleting workspace dir'
                 deleteDir()
-            //sh 'ls -la'
-            //sh 'pwd'
             }
         }
 
@@ -42,18 +42,6 @@ pipeline {
                 )
             }
         }
-
-//        stage('test ls') {
-//            steps {
-//                dir('jenkins/docker_php_deploy/') {
-//                    sh "ls -la"
-//                    sh "pwd"
-//                }
-//                    //dir inside workspace on slave
-//                    sh "ls -la"
-//                    sh "pwd"
-//            }
-//        }
 
         stage('Build docker image') {
             steps {
