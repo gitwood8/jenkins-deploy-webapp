@@ -39,7 +39,8 @@ pipeline {
             steps {
                 git(
                     url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
-                    branch: 'main'
+                    branch: 'main',
+                    env.GIT_COMMIT = git.GIT_COMMIT
                 )
             }
         }
@@ -47,8 +48,8 @@ pipeline {
         stage('Build docker image') {
             steps {
                 dir('jenkins/docker_php_deploy/docker/') {
-                    def MY_GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=6 HEAD').trim()
-                    sh "docker build -t ${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${MY_GIT_COMMIT} ."
+                    //def MY_GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=6 HEAD').trim()
+                    sh "docker build -t ${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${GIT_COMMIT} ."
                 }
             }
         }
