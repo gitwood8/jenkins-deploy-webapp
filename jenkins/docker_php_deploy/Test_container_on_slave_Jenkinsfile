@@ -53,7 +53,7 @@ pipeline {
                     sh 'curl ifconfig.me'
                     sleep 10 // time to check web
                     sh 'docker ps -qa | xargs docker stop'
-                    sh 'docker images -qa | xargs docker rmi 2>/dev/null || true'
+                    sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     // SUCCESS TEST:
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
                 }
