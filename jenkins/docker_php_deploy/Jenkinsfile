@@ -34,12 +34,20 @@ pipeline {
             }
         }
 
+        stage('Delete workspace before build starts') {
+            steps {
+                echo 'Deleting workspace dir'
+                deleteDir()
+            }
+        }
+
         stage('test ls') {
             steps {
                 dir('jenkins/docker_php_deploy') {
                     sh "ls -la"
                     sh "pwd"
-                }
+                } 
+                    //dir inside workspace on slave
                     sh "ls -la"
                     sh "pwd"
             }
