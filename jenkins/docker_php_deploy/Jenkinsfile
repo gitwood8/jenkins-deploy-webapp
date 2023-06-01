@@ -40,7 +40,7 @@ pipeline {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'awsaws',
+                            configName: 'slave-1',
                             transfers: [
                                 sshTransfer(
                                     //the same directory structure as in the source directory during the file transfer
@@ -64,7 +64,7 @@ pipeline {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'awsaws',
+                            configName: 'slave-1',
                             transfers: [
                                 sshTransfer(
                                     remoteDirectory: '/home/ec2-user/qwe/',
