@@ -10,7 +10,7 @@
 #  Update date:        31.05.2023                                           #
 #--------------------------------------------------------------------------*/
 pipeline {
-    agent any
+    agent { label 'slave-1' }
     environment {
         CI_IMAGE_NAME = 'web_container'
         CI_CONTAINER_NAME = 'test_container'
