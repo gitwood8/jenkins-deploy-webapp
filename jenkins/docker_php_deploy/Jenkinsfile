@@ -63,7 +63,7 @@ pipeline {
                     sleep 20
                     sh "docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'"
                     sh "docker ps && docker images"
-                    sh "curl ifconfig.me"
+                    sh "echo 'IP address for web app: \$(curl ifconfig.me)'"
                     sleep 60
                     sh "docker ps -qa | xargs docker stop"
                     sh "docker ps -qa | xargs docker rm"
