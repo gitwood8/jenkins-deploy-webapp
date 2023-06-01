@@ -67,7 +67,7 @@ pipeline {
                     sh 'docker ps -qa | xargs docker stop'
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null || true'
                     // SUCCESS TEST:
-                    sh 'if [ \$(docker images -qa | wc -l) == 0 ]; then echo "Success"; else echo "Vce ploho"; fi'
+                    sh 'if [ \$(docker images -qa | wc -l) == "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
                 }
             }
         }
