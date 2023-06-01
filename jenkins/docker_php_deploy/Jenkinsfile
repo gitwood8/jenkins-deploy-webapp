@@ -34,6 +34,17 @@ pipeline {
             }
         }
 
+        stage('test ls') {
+            steps {
+                dir('jenkins/docker_php_deploy') {
+                    sh "ls -la"
+                    sh "pwd"
+                }
+                    sh "ls -la"
+                    sh "pwd"
+            }
+        }
+
 //        stage('Transfer files') {
 //            steps {
 //                echo '------Starting transfer files over SSH------'
