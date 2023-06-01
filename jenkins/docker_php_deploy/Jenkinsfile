@@ -47,7 +47,7 @@ pipeline {
         stage('Build docker image') {
             steps {
                 dir('jenkins/docker_php_deploy/docker/') {
-                    sh "docker build -t ${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.BUILD_NUMBER} ."
+                    sh "docker build -t ${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_BRANCH} ."
                 }
             }
         }
