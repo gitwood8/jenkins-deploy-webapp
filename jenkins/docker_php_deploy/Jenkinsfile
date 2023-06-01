@@ -20,7 +20,6 @@ pipeline {
 
         CD_IMAGE_REPO_USER = 'wood8'
         CD_IMAGE_REPO_NAME = 'jenkins-webserver'
-        MY_GIT_COMMIT = 'sh ( script: 'git rev-parse HEAD', returnStdout: true )'
     }
 
     options {
@@ -48,13 +47,11 @@ pipeline {
         stage('Build docker image') {
             steps {
                 dir('jenkins/docker_php_deploy/docker/') {
-                    sh "docker build -t ${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.MY_GIT_COMMIT} ."
+                    MY_GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true)
+                    sh "docker build -t ${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${MY_GIT_COMMIT} ."
                 }
             }
         }
-
-
-
 
     }
 }
