@@ -37,11 +37,13 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git(
-                    url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
-                    branch: 'main'
-                )
-                env.GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=5 HEAD').trim()
+                script {
+                    git(
+                        url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
+                        branch: 'main'
+                    )
+                    env.GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=5 HEAD').trim()
+                }
             }
         }
 
