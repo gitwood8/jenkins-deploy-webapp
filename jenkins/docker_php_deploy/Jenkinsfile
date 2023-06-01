@@ -29,8 +29,8 @@ pipeline {
             steps {
                 echo 'Deleting workspace dir'
                 deleteDir()
-                //sh 'ls -la'
-                //sh 'pwd'
+            //sh 'ls -la'
+            //sh 'pwd'
             }
         }
 
@@ -65,7 +65,8 @@ pipeline {
                     sh 'curl ifconfig.me'
                     sleep 10
                     sh 'docker ps -qa | xargs docker stop'
-                    sh "for i in \$(docker images -qa); do docker rmi \$i 2>/dev/null; echo 'Removed image: \$i'; done"
+                    //sh "for i in \$(docker images -qa); do docker rmi \$i 2>/dev/null; done"
+                    sh 'docker images -qa | xargs docker rmi 2>/dev/null'
                 }
             }
         }
