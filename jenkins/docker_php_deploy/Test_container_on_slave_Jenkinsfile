@@ -4,8 +4,8 @@
 #  Edit jenkins configuration to add remote server and ssh key              #
 #  Its better to set "/" directory and define declaratively                 #
 #  Create new pipeline, choose SCM using https                              #
-#  Configure 1 slave (ubuntu), add ssh keys                                 #
-#  Install jenkins plugins "Docker Pipeline" and "Amazon ECR"               #
+#  Configure 1 slave (ubuntu), add ssh keys and go                          #
+#  Here i just test my image on remote jenkins slave                        #
 #                                                                           #
 #  Select "Script path" in git repo /jenkins/docker_php_deploy/Jenkinsfile  #
 #                                                                           #
