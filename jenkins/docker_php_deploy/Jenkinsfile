@@ -20,7 +20,7 @@ pipeline {
 
         CD_IMAGE_REPO_USER = 'wood8'
         CD_IMAGE_REPO_NAME = 'jenkins-webserver'
-        MY_GIT_COMMIT = "${env.GIT_COMMIT}"
+        MY_GIT_COMMIT = 'sh ( script: 'git rev-parse HEAD', returnStdout: true )'
     }
 
     options {
