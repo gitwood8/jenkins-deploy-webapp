@@ -43,7 +43,7 @@ pipeline {
 
         stage('test ls') {
             steps {
-                dir('jenkins/docker_php_deploy/*') {
+                dir('jenkins/docker_php_deploy/') {
                     sh "ls -la"
                     sh "pwd"
                 } 
