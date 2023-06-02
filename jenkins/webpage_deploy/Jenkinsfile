@@ -20,7 +20,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git(
-                    url: 'https://github.com/gitwood8/jenkins-deploy-webpage.git',
+                    url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
                     //url: 'git@github.com:gitwood8/jenkins-deploy-app.git',
                     //credentialsId: 'github-ssh-key',
                     branch: 'main'
