@@ -121,11 +121,10 @@ pipeline {
 
         stage('Run container on remote server') {
             agent { label 'master' }
-            user 'ec2-user'
             steps {
                 script {
                     echo '------Run container on remote server------'
-                    sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
+                    sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver', user: 'ec2-user',
                                 transfers: [
                                     sshTransfer(
                                         //remoteDirectory: '/home/ec2-user/qwe/',
