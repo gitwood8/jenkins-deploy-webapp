@@ -90,7 +90,7 @@ pipeline {
         }
 
         stage('Restart webserver') {
-            agent { label 'master' }
+            //agent { label 'master' }
             steps {
                 echo '------Restart webserver------'
                 sshPublisher(
