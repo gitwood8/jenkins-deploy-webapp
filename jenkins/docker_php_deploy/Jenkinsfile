@@ -49,13 +49,6 @@ pipeline {
             }
         }
 
-        stage('User input') {
-            steps {
-                myvar1 = userInput['param1']
-                echo 'myvar1'
-            }
-        }
-
         stage('Build image') {
             steps {
                 script {
@@ -74,7 +67,8 @@ pipeline {
                     sleep 20
                     sh "docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'"
                     sleep 20
-                    dockerImage.stop()
+                    //dockerImage.stop() - not permited
+                    sh 'docker ps -qa | xargs docker stop'
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
                 }
