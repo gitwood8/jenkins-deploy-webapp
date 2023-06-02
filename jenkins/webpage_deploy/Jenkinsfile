@@ -66,6 +66,7 @@ pipeline {
 
         stage('Transfer files') {
             steps {
+                agent { label 'slave-1' }
                 dir('jenkins/webpage_deploy') {
                     echo '------Starting publish over SSH------'
                     sshPublisher(
