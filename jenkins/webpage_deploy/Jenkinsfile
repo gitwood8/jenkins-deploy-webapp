@@ -9,7 +9,7 @@
 #  Update date:        31.05.2023                                        #
 #-----------------------------------------------------------------------*/
 pipeline {
-    agent any
+    agent { label 'slave-1' }
 
     options {
         skipDefaultCheckout()
@@ -66,22 +66,24 @@ pipeline {
 
         stage('Transfer files') {
             steps {
-                echo '------Starting publish over SSH------'
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'aws-webserver',
-                            transfers: [
-                                sshTransfer(
-                                    flatten: false,
-                                    remoteDirectory: '/var/www/html',
-                                    sourceFiles: 'index.html'
-                                    )
-                                ]
-                            )
-                        ]
-                    )
-                echo '------Finished publish over SSH------'
+                dir('jenkins/webpage_deploy') {
+                    echo '------Starting publish over SSH------'
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
+                                transfers: [
+                                    sshTransfer(
+                                        flatten: false,
+                                        remoteDirectory: '/var/www/html',
+                                        sourceFiles: 'index.html'
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    echo '------Finished publish over SSH------'
+                }
             }
         }
 
