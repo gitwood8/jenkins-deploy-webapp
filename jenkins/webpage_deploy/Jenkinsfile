@@ -79,7 +79,7 @@ pipeline {
                                     )
                                 ]
                             )
-                        ]   
+                        ]
                     )
                 echo '------Finished publish over SSH------'
             }
