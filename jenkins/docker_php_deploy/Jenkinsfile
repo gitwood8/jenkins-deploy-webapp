@@ -49,12 +49,10 @@ pipeline {
             }
         }
 
-        stages {
-            stage('User input') {
-                steps {
-                    myvar1 = userInput['param1']
-                    echo 'myvar1'
-                }
+        stage('User input') {
+            steps {
+                myvar1 = userInput['param1']
+                echo 'myvar1'
             }
         }
 
