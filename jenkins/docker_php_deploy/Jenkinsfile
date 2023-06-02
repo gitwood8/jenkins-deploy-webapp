@@ -119,12 +119,11 @@ pipeline {
      //       }
      //   }
 
-
         stage('Run container on remote server') {
-            agent { 
+            agent {
                 label 'master'
                 user 'ec2-user'
-                }
+            }
             steps {
                 script {
                     echo '------Run container on remote server------'
