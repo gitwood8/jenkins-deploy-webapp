@@ -60,10 +60,34 @@ pipeline {
         // docker url: ~$docker info
         stage('Push image') {
             steps {
-                withDockerRegistry( credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/' ) {
-                    dockerImage.push()
+                script {
+                    withDockerRegistry( credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/' ) {
+                        dockerImage.push()
+                    }
                 }
             }
         }
     }
 }
+
+/*
+
+!!!разобрать пример!!!ф:
+
+stage('Building image NGINX') {
+  steps{
+    script {
+      dockerImageNginx = docker.build registrynginx + ":$BUILD_NUMBER", "-f dockerfilenginx ."  
+    }
+  }
+}
+stage('Push Image to registry') {
+  steps{
+    script{
+      withDockerRegistry(credentialsId: 'gcr:xxxxx', url: 'http://eu.gcr.io/xxxx/') {
+        dockerImageNginx.push()
+      }
+    }
+  }
+} 
+*/
