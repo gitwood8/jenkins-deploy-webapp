@@ -70,7 +70,7 @@ pipeline {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'awsaws',
+                            configName: 'aws-webserver',
                             transfers: [
                                 sshTransfer(
                                     flatten: false,
