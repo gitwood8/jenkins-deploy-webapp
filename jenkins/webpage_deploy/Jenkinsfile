@@ -93,7 +93,7 @@ pipeline {
                     //failOnError: true,
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'awsaws',
+                            configName: 'aws-webserver',
                             transfers: [
                                 sshTransfer(
                                     execCommand: 'sudo systemctl restart httpd'
