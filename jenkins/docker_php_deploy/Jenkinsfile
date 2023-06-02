@@ -120,10 +120,8 @@ pipeline {
      //   }
 
         stage('Run container on remote server') {
-            agent {
-                label 'master'
-                user 'ec2-user'
-            }
+            agent { label 'master' }
+            user 'ec2-user'
             steps {
                 script {
                     echo '------Run container on remote server------'
