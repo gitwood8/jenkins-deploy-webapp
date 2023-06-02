@@ -73,9 +73,9 @@ pipeline {
                     sh 'docker ps -qa | xargs docker stop'
                 }
             }
-        }
+}
 */
-        // docker url: ~$docker info
+// docker url: ~$docker info
 /*        stage('Push to DockerHub') {
             steps {
                 script {
@@ -84,7 +84,7 @@ pipeline {
                     }
                 }
             }
-        }
+}
 */
         stage('Stop container and clean') {
             steps {
@@ -119,8 +119,6 @@ pipeline {
  //           }
  //       }
 
-
-
         stage('Run container on remote server') {
             agent { label 'master' }
             steps {
@@ -135,16 +133,14 @@ pipeline {
                                         remoteDirectory: '/home/ec2-user/qwe/',
                                         execCommand: """
                                         docker pull ${FULL_IMAGE_NAME}
-                                        docker run -d --name ${CI_CONTAINER_NAME} \
-                                        -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME}
+                                        docker run -d --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME}
                                         sleep 20
                                         """
                                     ),
                                     sshTransfer(
                                         remoteDirectory: '/home/ec2-user/qwe/',
                                         execCommand: """
-                                        docker inspect --format='{{json .State.Health}}' \
-                                        \$(docker ps -q) | grep '\"Status\":\"healthy\"'
+                                        docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'
                                         """
                                     )
                                 ]
@@ -178,12 +174,12 @@ pipeline {
 //                         docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}").stop()
 //                     }
 
-//                     // Clean up images on the remote server
-//                     remoteNode.withGroovy {
-//                         sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
-//                     }
-//                 }
-//             }
-//         } */
+    //                     // Clean up images on the remote server
+    //                     remoteNode.withGroovy {
+    //                         sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
+    //                     }
+    //                 }
+    //             }
+    //         } */
     }
 }
