@@ -78,9 +78,9 @@ pipeline {
                                         flatten: false,
                                         remoteDirectory: '/var/www/html',
                                         sourceFiles: 'index.html'
-                                        )
+                                        ),
                                     ]
-                                )
+                                ),
                             ]
                         )
                     echo '------Finished publish over SSH------'
