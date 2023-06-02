@@ -96,8 +96,8 @@ pipeline {
         }
 
         stage('Run container on remote server') {
-            agent { label 'master' }
             steps {
+                agent { label 'master' }
                 echo '------Run container on remote server------'
                 sshPublisher(
                     publishers: [
