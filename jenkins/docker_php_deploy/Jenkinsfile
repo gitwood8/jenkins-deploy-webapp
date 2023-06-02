@@ -101,7 +101,7 @@ pipeline {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'slave-1',
+                            configName: 'aws-webserver',
                             transfers: [
                                 sshTransfer(
                                     remoteDirectory: '/home/ec2-user/qwe/',
