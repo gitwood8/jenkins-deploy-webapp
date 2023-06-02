@@ -30,16 +30,18 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh '''
-                    echo '------Build Started------'
-                    hostname && pwd && whoami
-                    # && sudo chmod 777 ./*
-                    ls -la
-                    cat index.html
-                    echo "Build by jenkins Build# $BUILD_ID" >> index.html
-                    cat index.html
-                    echo '------Build Finished------'
-                '''
+                dir('jenkins/webpage_deploy') {
+                    sh '''
+                        echo '------Build Started------'
+                        hostname && pwd && whoami
+                        # && sudo chmod 777 ./*
+                        ls -la
+                        cat index.html
+                        echo "Build by jenkins Build# $BUILD_ID" >> index.html
+                        cat index.html
+                        echo '------Build Finished------'
+                    '''
+                }
             }
         }
 
@@ -75,7 +77,7 @@ pipeline {
                                     )
                                 ]
                             )
-                        ]
+                        ]   
                     )
                 echo '------Finished publish over SSH------'
             }
