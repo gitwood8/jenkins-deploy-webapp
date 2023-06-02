@@ -6,11 +6,11 @@
 #  Create new pipeline, choose SCM using https                              #
 #  Configure 1 slave (ubuntu), add ssh keys                                 #
 #  Install jenkins plugins "Docker Pipeline" and "Amazon ECR"               #
-#  Create DockerHub token, add creds to Jenkins
+#  Create DockerHub token, add creds to Jenkins                             #
 #                                                                           #
 #  Select "Script path" in git repo jenkins/docker_php_deploy/Jenkinsfile   #
 #                                                                           #
-#  Last update:        01.06.2023                                           #
+#  Last update:        02.06.2023                                           #
 #--------------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
@@ -59,7 +59,7 @@ pipeline {
             }
         }
 
-        stage('Test run container') {
+        stage('Run container test') {
             steps {
                 script {
                     def dockerImage = docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}")
@@ -74,11 +74,12 @@ pipeline {
         }
 
         // docker url: ~$docker info
-        stage('Push image to DockerHub') {
+        stage('Push to DockerHub') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/') {
-                        docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${GIT_COMMIT}").push()
+                        //docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${GIT_COMMIT}").push()
+                        docker.image("${env.dockerImage}").push()
                     }
                 }
             }
@@ -87,8 +88,6 @@ pipeline {
         stage('Stop container and clean') {
             steps {
                 script {
-                    sh 'ls -la'
-                    sh 'pwd'
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
                 }
