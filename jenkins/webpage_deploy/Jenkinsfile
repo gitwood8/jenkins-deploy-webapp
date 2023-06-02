@@ -18,6 +18,7 @@ pipeline {
 
     stages {
         stage('Checkout') {
+            agent { label 'master' }
             steps {
                 git(
                     url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
