@@ -61,8 +61,8 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
-                    withDockerRegistry( credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/' ) {
-                        dockerImage.push()
+                    withDockerRegistry(credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/') {
+                        docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${GIT_COMMIT}").push()
                     }
                 }
             }
@@ -77,7 +77,7 @@ pipeline {
 stage('Building image NGINX') {
   steps{
     script {
-      dockerImageNginx = docker.build registrynginx + ":$BUILD_NUMBER", "-f dockerfilenginx ."  
+      dockerImageNginx = docker.build registrynginx + ":$BUILD_NUMBER", "-f dockerfilenginx ."
     }
   }
 }
@@ -89,5 +89,5 @@ stage('Push Image to registry') {
       }
     }
   }
-} 
+}
 */
