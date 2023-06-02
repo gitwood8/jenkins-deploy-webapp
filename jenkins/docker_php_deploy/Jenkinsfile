@@ -103,7 +103,7 @@ pipeline {
                     failOnError: true,
                     publishers: [
                         sshPublisher(
-                            configName: 'your-config-name',
+                            configName: 'aws-webserver',
                             transfers: [
                                 sshTransfer(
                                     execCommand: 'ls -la'
