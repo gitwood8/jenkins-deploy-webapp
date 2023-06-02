@@ -47,18 +47,20 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh '''
-                    echo '------Test Started------'
-                    result=$(grep "Hello" index.html | wc -l)
-                    echo $result
-                    if [ "$result" = "1" ]; then
-                        echo "Test passed"
-                    else
-                        echo "Test failed"
-                        exit 1
-                    fi
-                    echo '------Test Finished------'
-                '''
+                dir('jenkins/webpage_deploy') {
+                    sh '''
+                        echo '------Test Started------'
+                        result=$(grep "Hello" index.html | wc -l)
+                        echo $result
+                        if [ "$result" = "1" ]; then
+                            echo "Test passed"
+                        else
+                            echo "Test failed"
+                            exit 1
+                        fi
+                        echo '------Test Finished------'
+                    '''
+                }
             }
         }
 
