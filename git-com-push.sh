@@ -4,7 +4,7 @@ read -p "Enter a comment for commit: " COM && echo ""
 read -p "Ready to Commit and Push with comment: '$COM'? y/n: " ANS && echo ""
 if [ $ANS == "y" ] 
 then
-    git add ~/jenkins/jenkins-deploy-app/
+    git add /home/wood/jenkins/jenkins-deploy-app
     git commit -m "$COM"
     git push
 else
