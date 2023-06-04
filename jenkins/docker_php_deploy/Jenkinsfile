@@ -42,7 +42,7 @@ pipeline {
                 echo "${FULL_IMAGE_NAME}"
             }
         }
-/*
+
         // Без этого степа создаются директории но не скачиваются файлы
         stage('Checkout git') {
             steps {
@@ -55,7 +55,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('Build image') {
             steps {
                 script {
