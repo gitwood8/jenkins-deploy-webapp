@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     sh 'pwd && ls -la && whoami'
-                    echo ${ env.GIT_COMMIT }
+                    echo ${env.GIT_COMMIT}
                 }
             }
         }
