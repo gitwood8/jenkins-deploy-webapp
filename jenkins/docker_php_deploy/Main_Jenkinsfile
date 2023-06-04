@@ -129,11 +129,13 @@ pipeline {
                     params.RemoteDeploy
                 }
             }
-            //agent { label 'slave-1' }
             steps {
                 script { //The "script" block allows you to execute multiple steps within a single stage.
                     echo '------Run container on remote server------'
-                    sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
                                 transfers: [
                                 //    sshTransfer(
                                 //        //remoteDirectory: '/home/ec2-user/qwe/',
@@ -159,6 +161,36 @@ pipeline {
                 }
             }
         }
+// ВОТ ЭТО ПОКА ЧТО ОСНОВНОЙ ВАРИАНТ:
+        stage('Run container on remote server') {
+            when {
+                expression {
+                    params.RemoteDeploy
+                }
+            }
+            steps {
+                script {
+                    echo '------Run container on remote server------'
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
+                                transfers: [
+                                    sshTransfer(
+                                        execCommand: 'docker ps >> ~/joooooooooooopa.txt; docker images >> ~/joooooooooooopa.txt'
+                                    ),
+                                    sshTransfer(
+                                        execCommand: 'docker ps >> ~/joooooooooooopa2.txt; docker images >> ~/joooooooooooopa2.txt'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
+            }
+        }
+
+
 
 // /*         stage('Test run container on remote server') {
 //             steps {
