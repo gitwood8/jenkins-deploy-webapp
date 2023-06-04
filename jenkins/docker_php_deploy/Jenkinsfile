@@ -91,20 +91,19 @@ pipeline {
         }
 
         stage('Stop container and clean') {
-            environment {
-                FULL_IMAGE_NAME = "${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}"
-            }
             steps {
                 script {
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
-                    sh "${FULL_IMAGE_NAME} >> ~/joooooooooooopa222222.txt"
                 }
             }
         }
 
         // ВОТ ЭТО ПОКА ЧТО ОСНОВНОЙ ВАРИАНТ:
         stage('Run container on remote server') {
+            environment {
+                FULL_IMAGE_NAME = "${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}"
+            }
             steps {
                 script {
                     echo '------Run container on remote server------'
