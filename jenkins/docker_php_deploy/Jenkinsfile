@@ -14,6 +14,10 @@
 #--------------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
+    parameters {
+        choice(name: 'VERSION', choices: ['1', '2'], description: 'blabla')
+        booleanParam(name: 'RemoteDeploy', default: false, description: 'deploy or not')
+    }
     environment {
         CI_IMAGE_NAME = 'web_container'
         CI_CONTAINER_NAME = 'test_container'
@@ -120,6 +124,11 @@ pipeline {
      //   }
 
         stage('Run container on remote server') {
+            when {
+                expression {
+                    params.RemoteDeploy
+                }
+            }
             agent { label 'master' }
             steps {
                 script {
@@ -136,14 +145,15 @@ pipeline {
                                         ),
                                     sshTransfer(
                                         //remoteDirectory: '/home/ec2-user/qwe/',
-                                        execCommand: """
+                                        execCommand: '''
                                         docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'
-                                        """
+                                        '''
                                     )
                                 ]
                             )
                         ]
                     )
+                    echo 'deploy version ${params.VERSION}'
                 }
             }
         }
