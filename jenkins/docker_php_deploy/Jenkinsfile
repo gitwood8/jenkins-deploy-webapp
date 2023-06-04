@@ -39,6 +39,7 @@ pipeline {
             steps {
                 echo 'Deleting workspace dir'
                 deleteDir()
+                echo "${FULL_IMAGE_NAME}"
             }
         }
 /*
