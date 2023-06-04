@@ -16,7 +16,7 @@ pipeline {
     agent { label 'slave-1' }
     parameters {
         choice(name: 'VERSION', choices: ['1', '2'], description: 'blabla')
-        booleanParam(name: 'RemoteDeploy', default: false, description: 'deploy or not')
+        booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'deploy or not')
     }
     environment {
         CI_IMAGE_NAME = 'web_container'
