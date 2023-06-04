@@ -41,7 +41,7 @@ pipeline {
                 deleteDir()
             }
         }
-
+/*
         // Без этого степа создаются директории но не скачиваются файлы
         stage('Checkout git') {
             steps {
@@ -98,7 +98,7 @@ pipeline {
                 }
             }
         }
-
+*/
 // ВОТ ЭТО ПОКА ЧТО ОСНОВНОЙ ВАРИАНТ:
         stage('Run container on remote server') {
             steps {
