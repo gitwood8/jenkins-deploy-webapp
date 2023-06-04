@@ -35,7 +35,6 @@ pipeline {
     }
 
     stages {
-
         stage('Delete workspace before build starts') {
             steps {
                 echo 'Deleting workspace dir'
@@ -54,21 +53,19 @@ pipeline {
         stage('Run container on remote server') {
             //agent { label 'master' }
             steps {
-                script {
-                    echo '------Run container on remote server------'
-                    sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
-                                transfers: [
-                                    sshTransfer(
-                                        execCommand: '''
-                                        touch ~/jooooooooooooooooooopa.txt
-                                        '''
-                                    )
-                                ]
-                            )
-                        ]
-                    )
-                    echo 'deploy version ${params.VERSION}'
-                }
+                echo '------Run container on remote server------'
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: '''
+                                    touch ~/jooooooooooooooooooopa.txt
+                                    '''
+                                )
+                            ]
+                        )
+                    ]
+                )
+                echo 'deploy version (params.VERSION)'
             }
         }
     }
