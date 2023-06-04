@@ -65,7 +65,7 @@ pipeline {
             }
         }
 
-/*        stage('Run container test') {
+        stage('Run container test') {
             steps {
                 script {
                     def dockerImage = docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}")
@@ -78,9 +78,9 @@ pipeline {
                 }
             }
 }
-*/
+
 // docker url: ~$docker info
-/*        stage('Push to DockerHub') {
+        stage('Push to DockerHub') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/') {
@@ -89,75 +89,12 @@ pipeline {
                 }
             }
 }
-*/
+
         stage('Stop container and clean') {
             steps {
                 script {
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
-                }
-            }
-        }
-// почему то не выполняются команды на хосте
-     //   stage('Execute shell commands on remote server') {
-     //       steps {
-     //           echo '------Executing shell commands on remote server------'
-     //           publishOverSSH(
-     //               bypassProxy: true,
-     //               failOnError: true,
-     //               publishers: [
-     //                   sshPublisher(
-     //                       configName: 'aws-webserver',
-     //                       transfers: [
-     //                           sshTransfer(
-     //                               execCommand: 'ls -la'
-     //                           ),
-     //                           sshTransfer(
-     //                               execCommand: 'echo "Hello, World!"'
-     //                           )
-     //                       ]
-     //                   )
-     //               ]
-     //           )
-     //           echo '------Finished executing shell commands on remote server------'
-     //       }
-     //   }
-
-        stage('Run container on remote server') {
-            when {
-                expression {
-                    params.RemoteDeploy
-                }
-            }
-            steps {
-                script { //The "script" block allows you to execute multiple steps within a single stage.
-                    echo '------Run container on remote server------'
-                    sshPublisher(
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'aws-webserver',
-                                transfers: [
-                                //    sshTransfer(
-                                //        //remoteDirectory: '/home/ec2-user/qwe/',
-                                //        execCommand: """
-                                //        
-                                //        
-                                //        
-                                //        """
-                                //        ),
-                                    sshTransfer(
-                                    //    execCommand: '''
-                                    //    docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'
-                                    //    '''
-                                        execCommand: '''
-                                        touch ~/jooooooooooooooooooopa.txt
-                                        '''
-                                    )
-                                ]
-                            )
-                        ]
-                    )
-                    echo 'deploy version ${params.VERSION}'
                 }
             }
         }
