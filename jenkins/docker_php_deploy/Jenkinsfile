@@ -41,7 +41,7 @@ pipeline {
                 deleteDir()
             }
         }
-
+/*
         // Без этого степа создаются директории но не скачиваются файлы
         stage('Checkout git') {
             steps {
@@ -98,6 +98,7 @@ pipeline {
                 }
             }
         }
+*/
 // ВОТ ЭТО ПОКА ЧТО ОСНОВНОЙ ВАРИАНТ:
         stage('Run container on remote server') {
             steps {
@@ -108,15 +109,18 @@ pipeline {
                             sshPublisherDesc(
                                 configName: 'aws-webserver',
                                 transfers: [
+                                //    sshTransfer(
+                                //        execCommand: '''
+                                //        docker pull ${FULL_IMAGE_NAME};
+                                //        docker run -d --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
+                                //        sleep 20
+                                //        '''
+                                //    ),
+                                //    sshTransfer(
+                                //        execCommand: 'docker ps >> ~/joooooooooooopa2.txt; docker images >> ~/joooooooooooopa2.txt'
+                                //    ),
                                     sshTransfer(
-                                        execCommand: '''
-                                        docker pull ${FULL_IMAGE_NAME};
-                                        docker run -d --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
-                                        sleep 20
-                                        '''
-                                    ),
-                                    sshTransfer(
-                                        execCommand: 'docker ps >> ~/joooooooooooopa2.txt; docker images >> ~/joooooooooooopa2.txt'
+                                        execCommand: 'echo ${CI_IMAGE_NAME} >> ~/joooooooooooopa2.txt'
                                     )
                                 ]
                             )
