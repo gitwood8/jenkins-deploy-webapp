@@ -49,23 +49,24 @@ pipeline {
                 }
             }
         }
-
-        stage('Run container on remote server') {
             //agent { label 'master' }
+        stage('Run container on remote server') {
             steps {
-                echo '------Run container on remote server------'
-                sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
-                            transfers: [
-                                sshTransfer(
-                                    execCommand: '''
-                                    touch ~/jooooooooooooooooooopa.txt
-                                    '''
-                                )
-                            ]
-                        )
-                    ]
-                )
-                echo 'deploy version (params.VERSION)'
+                script {
+                    echo '------Run container on remote server------'
+                    sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
+                                transfers: [
+                                    sshTransfer(
+                                        execCommand: '''
+                                        touch ~/jooooooooooooooooooopa.txt
+                                        '''
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                    //echo 'deploy version (params.VERSION)'
+                }
             }
         }
     }

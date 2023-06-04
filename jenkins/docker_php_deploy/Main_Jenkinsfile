@@ -131,7 +131,7 @@ pipeline {
             }
             //agent { label 'slave-1' }
             steps {
-                script {
+                script { //The "script" block allows you to execute multiple steps within a single stage.
                     echo '------Run container on remote server------'
                     sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
                                 transfers: [
