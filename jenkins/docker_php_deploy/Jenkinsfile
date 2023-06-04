@@ -55,7 +55,7 @@ pipeline {
                 }
             }
         }
-/*
+
         stage('Build image') {
             steps {
                 script {
@@ -99,7 +99,7 @@ pipeline {
                 }
             }
         }
-*/
+
 // ВОТ ЭТО ПОКА ЧТО ОСНОВНОЙ ВАРИАНТ:
         stage('Run container on remote server') {
             steps {
