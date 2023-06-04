@@ -65,8 +65,14 @@ pipeline {
             }
         }
 
+        stage('Sanity check') {
+            steps {
+                input "Does the staging environment look ok?"
+            }
+        }
+
         stage('Transfer files') {
-            //agent { label 'master' }
+            agent { label 'master' }
             steps {
                 dir('jenkins/webpage_deploy') {
                     echo '------Starting publish over SSH------'
@@ -90,7 +96,7 @@ pipeline {
         }
 
         stage('Restart webserver') {
-            //agent { label 'master' }
+            agent { label 'master' }
             steps {
                 echo '------Restart webserver------'
                 sshPublisher(
