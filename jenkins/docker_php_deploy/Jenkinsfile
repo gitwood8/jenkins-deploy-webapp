@@ -14,10 +14,10 @@
 #--------------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
-    /*parameters {
+    parameters {
         choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
         booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
-    }*/
+    }
     environment {
         CI_IMAGE_NAME = 'web_container'
         CI_CONTAINER_NAME = 'test_container'
@@ -42,14 +42,126 @@ pipeline {
             }
         }
 
-        stage('Stop container and clean') {
+        // Без этого степа создаются директории но не скачиваются файлы
+        stage('Checkout git') {
             steps {
                 script {
-                    sh 'pwd && ls -la && whoami'
+                    git(
+                        url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
+                        branch: 'main'
+                    )
+                    env.GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=5 HEAD').trim()
                 }
             }
         }
-        //agent { label 'master' }
+
+        stage('Build image') {
+            steps {
+                script {
+                    dir('jenkins/docker_php_deploy/docker/') {
+                        docker.build("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}")
+                    }
+                }
+            }
+        }
+
+/*        stage('Run container test') {
+            steps {
+                script {
+                    def dockerImage = docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}")
+                    dockerImage.run("-d --rm --name ${env.CI_CONTAINER_NAME} -p ${env.CONTAINER_EXTERNAL_PORT}:80")
+                    sleep 20
+                    sh "docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'"
+                    //sleep 20
+                    //dockerImage.stop() - not permited
+                    sh 'docker ps -qa | xargs docker stop'
+                }
+            }
+}
+*/
+// docker url: ~$docker info
+/*        stage('Push to DockerHub') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/') {
+                        docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${GIT_COMMIT}").push()
+                    }
+                }
+            }
+}
+*/
+        stage('Stop container and clean') {
+            steps {
+                script {
+                    sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
+                    sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
+                }
+            }
+        }
+// почему то не выполняются команды на хосте
+     //   stage('Execute shell commands on remote server') {
+     //       steps {
+     //           echo '------Executing shell commands on remote server------'
+     //           publishOverSSH(
+     //               bypassProxy: true,
+     //               failOnError: true,
+     //               publishers: [
+     //                   sshPublisher(
+     //                       configName: 'aws-webserver',
+     //                       transfers: [
+     //                           sshTransfer(
+     //                               execCommand: 'ls -la'
+     //                           ),
+     //                           sshTransfer(
+     //                               execCommand: 'echo "Hello, World!"'
+     //                           )
+     //                       ]
+     //                   )
+     //               ]
+     //           )
+     //           echo '------Finished executing shell commands on remote server------'
+     //       }
+     //   }
+
+        stage('Run container on remote server') {
+            when {
+                expression {
+                    params.RemoteDeploy
+                }
+            }
+            steps {
+                script { //The "script" block allows you to execute multiple steps within a single stage.
+                    echo '------Run container on remote server------'
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
+                                transfers: [
+                                //    sshTransfer(
+                                //        //remoteDirectory: '/home/ec2-user/qwe/',
+                                //        execCommand: """
+                                //        
+                                //        
+                                //        
+                                //        """
+                                //        ),
+                                    sshTransfer(
+                                    //    execCommand: '''
+                                    //    docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'
+                                    //    '''
+                                        execCommand: '''
+                                        touch ~/jooooooooooooooooooopa.txt
+                                        '''
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                    echo 'deploy version ${params.VERSION}'
+                }
+            }
+        }
+// ВОТ ЭТО ПОКА ЧТО ОСНОВНОЙ ВАРИАНТ:
         stage('Run container on remote server') {
             steps {
                 script {
@@ -61,8 +173,9 @@ pipeline {
                                 transfers: [
                                     sshTransfer(
                                         execCommand: '''
-                                        docker ps >> ~/joooooooooooopa.txt;
-                                        docker images >> ~/joooooooooooopa.txt
+                                        docker pull ${FULL_IMAGE_NAME};
+                                        docker run -d --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
+                                        sleep 20
                                         '''
                                     ),
                                     sshTransfer(
@@ -75,5 +188,38 @@ pipeline {
                 }
             }
         }
+
+
+
+// /*         stage('Test run container on remote server') {
+//             steps {
+//                 script {
+//                     def remoteNode = getNodeByLabel('aws-webserver') // Replace 'your_remote_host' with the label of your remote host in Jenkins
+//                     //def remoteDir = '/home/ec2-user/qwe/' // Replace with the directory where your Dockerfile is located on the remote server
+
+//                     // Pull the Docker image from Docker Hub
+//                     remoteNode.withGroovy {
+//                         docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}").pull()
+//                     }
+
+//                     // Run the Docker container
+//                     remoteNode.withGroovy {
+//                         docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}").run("-d --rm --name ${env.CI_CONTAINER_NAME} -p ${env.CONTAINER_EXTERNAL_PORT}:80")
+//                     }
+
+//                     sleep 30
+
+//                     // Stop and remove the Docker container
+//                     remoteNode.withGroovy {
+//                         docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}").stop()
+//                     }
+
+    //                     // Clean up images on the remote server
+    //                     remoteNode.withGroovy {
+    //                         sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
+    //                     }
+    //                 }
+    //             }
+    //         } */
     }
 }

@@ -1,0 +1,79 @@
+/*--------------------------------------------------------------------------#
+#  Jenkins running on remote EC2 AWS instance, remote webserver too         #
+#  Need to install ssh plugins                                              #
+#  Edit jenkins configuration to add remote server and ssh key              #
+#  Its better to set "/" directory and define declaratively                 #
+#  Create new pipeline, choose SCM using https                              #
+#  Configure 1 slave (ubuntu), add ssh keys                                 #
+#  Plugins "Docker Pipeline", "Amazon ECR", "Parameterized Trigger plugin"  #
+#  Create DockerHub token, add creds to Jenkins                             #
+#                                                                           #
+#  Select "Script path" in git repo jenkins/docker_php_deploy/Jenkinsfile   #
+#                                                                           #
+#  Last update:        02.06.2023                                           #
+#--------------------------------------------------------------------------*/
+pipeline {
+    agent { label 'slave-1' }
+    /*parameters {
+        choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
+        booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
+    }*/
+    environment {
+        CI_IMAGE_NAME = 'web_container'
+        CI_CONTAINER_NAME = 'test_container'
+        CONTAINER_EXTERNAL_PORT = '8080'
+
+        CD_IMAGE_REPO_USER = 'wood8'
+        CD_IMAGE_REPO_NAME = 'jenkins-webserver'
+
+        FULL_IMAGE_NAME = "${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${GIT_COMMIT}"
+    }
+
+    options {
+        skipDefaultCheckout()
+        timestamps()
+    }
+
+    stages {
+        stage('Delete workspace before build starts') {
+            steps {
+                echo 'Deleting workspace dir'
+                deleteDir()
+            }
+        }
+
+        stage('Stop container and clean') {
+            steps {
+                script {
+                    sh 'pwd && ls -la && whoami'
+                }
+            }
+        }
+        //agent { label 'master' }
+        stage('Run container on remote server') {
+            steps {
+                script {
+                    echo '------Run container on remote server------'
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
+                                transfers: [
+                                    sshTransfer(
+                                        execCommand: '''
+                                        docker ps >> ~/joooooooooooopa.txt;
+                                        docker images >> ~/joooooooooooopa.txt
+                                        '''
+                                    ),
+                                    sshTransfer(
+                                        execCommand: 'docker ps >> ~/joooooooooooopa2.txt; docker images >> ~/joooooooooooopa2.txt'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
+            }
+        }
+    }
+}
