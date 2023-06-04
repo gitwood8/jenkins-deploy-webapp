@@ -129,7 +129,7 @@ pipeline {
                     params.RemoteDeploy
                 }
             }
-            agent { label 'slave-1' }
+            //agent { label 'slave-1' }
             steps {
                 script {
                     echo '------Run container on remote server------'
