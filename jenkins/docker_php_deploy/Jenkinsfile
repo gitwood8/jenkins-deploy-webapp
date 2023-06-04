@@ -5,7 +5,7 @@
 #  Its better to set "/" directory and define declaratively                 #
 #  Create new pipeline, choose SCM using https                              #
 #  Configure 1 slave (ubuntu), add ssh keys                                 #
-#  Install jenkins plugins "Docker Pipeline" and "Amazon ECR"               #
+#  Plugins "Docker Pipeline", "Amazon ECR", "Parameterized Trigger plugin"  #
 #  Create DockerHub token, add creds to Jenkins                             #
 #                                                                           #
 #  Select "Script path" in git repo jenkins/docker_php_deploy/Jenkinsfile   #
@@ -16,7 +16,7 @@ pipeline {
     agent { label 'slave-1' }
     parameters {
         choice(name: 'VERSION', choices: ['1', '2'], description: 'blabla')
-        booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'deploy or not')
+        booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
     }
     environment {
         CI_IMAGE_NAME = 'web_container'
@@ -129,7 +129,7 @@ pipeline {
                     params.RemoteDeploy
                 }
             }
-            agent { label 'master' }
+            agent { label 'slave-1' }
             steps {
                 script {
                     echo '------Run container on remote server------'
