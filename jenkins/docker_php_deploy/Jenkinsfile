@@ -120,7 +120,7 @@ pipeline {
                                 //        execCommand: 'docker ps >> ~/joooooooooooopa2.txt; docker images >> ~/joooooooooooopa2.txt'
                                 //    ),
                                     sshTransfer(
-                                        execCommand: 'echo ${env.CI_IMAGE_NAME} >> ~/joooooooooooopa2.txt'
+                                        execCommand: "echo ${env.CI_IMAGE_NAME} >> ~/joooooooooooopa2.txt"
                                     )
                                 ]
                             )
