@@ -26,7 +26,7 @@ pipeline {
         CD_IMAGE_REPO_USER = 'wood8'
         CD_IMAGE_REPO_NAME = 'jenkins-webserver'
 
-        FULL_IMAGE_NAME = "${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${GIT_COMMIT}"
+        FULL_IMAGE_NAME = "${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}"
     }
 
     options {
@@ -95,7 +95,7 @@ pipeline {
                 script {
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
-                    sh "${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt"
+                    //sh "${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt"
                 }
             }
         }
