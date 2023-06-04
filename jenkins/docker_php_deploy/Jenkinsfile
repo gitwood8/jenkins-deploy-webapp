@@ -60,13 +60,12 @@ pipeline {
                                 configName: 'aws-webserver',
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker ps >> ~/joooooooooooopa.txt, docker images >> ~/joooooooooooopa.txt'
+                                        execCommand: 'docker ps >> ~/joooooooooooopa.txt; docker images >> ~/joooooooooooopa.txt'
                                     )
                                 ]
                             )
                         ]
                     )
-                //echo 'deploy version (params.VERSION)'
                 }
             }
         }
