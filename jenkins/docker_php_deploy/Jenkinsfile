@@ -14,10 +14,10 @@
 #--------------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
-    parameters {
-        choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
-        booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
-    }
+//    parameters {
+//        choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
+//        booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
+//    }
     environment {
         CI_IMAGE_NAME = 'web_container'
         CI_CONTAINER_NAME = 'test_container'
