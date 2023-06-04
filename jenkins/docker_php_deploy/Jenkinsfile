@@ -54,7 +54,10 @@ pipeline {
             steps {
                 script {
                     echo '------Run container on remote server------'
-                    sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
                                 transfers: [
                                     sshTransfer(
                                         execCommand: 'touch ~/jooooooooooooooooooopa.txt'
