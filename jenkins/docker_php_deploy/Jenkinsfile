@@ -60,7 +60,7 @@ pipeline {
                                 configName: 'aws-webserver',
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker ps > ~/joooooooooooopa.txt'
+                                        execCommand: 'docker ps >> ~/joooooooooooopa.txt, docker images >> ~/joooooooooooopa.txt'
                                     )
                                 ]
                             )
