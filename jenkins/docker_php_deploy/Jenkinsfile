@@ -57,9 +57,7 @@ pipeline {
                     sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: '''
-                                        touch ~/jooooooooooooooooooopa.txt
-                                        '''
+                                        execCommand: 'touch ~/jooooooooooooooooooopa.txt'
                                     )
                                 ]
                             )
