@@ -14,10 +14,10 @@
 #--------------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
-//    parameters {
-//        choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
-//        booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
-//    }
+    //    parameters {
+    //        choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
+    //        booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
+    //    }
     environment {
         CI_IMAGE_NAME = 'web_container'
         CI_CONTAINER_NAME = 'test_container'
@@ -39,7 +39,6 @@ pipeline {
             steps {
                 echo 'Deleting workspace dir'
                 deleteDir()
-                echo "${FULL_IMAGE_NAME}"
             }
         }
 
@@ -80,7 +79,7 @@ pipeline {
             }
         }
 
-// docker url: ~$docker info
+        // docker url: ~$docker info
         stage('Push to DockerHub') {
             steps {
                 script {
@@ -96,11 +95,12 @@ pipeline {
                 script {
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
+                    sh "${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt"
                 }
             }
         }
 
-// ВОТ ЭТО ПОКА ЧТО ОСНОВНОЙ ВАРИАНТ:
+        // ВОТ ЭТО ПОКА ЧТО ОСНОВНОЙ ВАРИАНТ:
         stage('Run container on remote server') {
             steps {
                 script {
@@ -115,7 +115,7 @@ pipeline {
                                         docker pull ${FULL_IMAGE_NAME};
                                         docker run -d --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
                                         sleep 20;
-                                        echo ${FULL_IMAGE_NAME} >> jjjjjjjjjjjjj.txt
+                                        echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt
                                         """
                                     ),
                                     sshTransfer(
@@ -131,8 +131,6 @@ pipeline {
                 }
             }
         }
-
-
 
 // /*         stage('Test run container on remote server') {
 //             steps {
