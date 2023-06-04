@@ -14,10 +14,10 @@
 #--------------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
-    parameters {
+    /*parameters {
         choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
         booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
-    }
+    }*/
     environment {
         CI_IMAGE_NAME = 'web_container'
         CI_CONTAINER_NAME = 'test_container'
@@ -47,6 +47,27 @@ pipeline {
             steps {
                 script {
                     sh 'pwd && ls -la && whoami'
+                }
+            }
+        }
+
+        stage('Run container on remote server') {
+            //agent { label 'master' }
+            steps {
+                script {
+                    echo '------Run container on remote server------'
+                    sshPublisher(publishers: [sshPublisherDesc(configName: 'aws-webserver',
+                                transfers: [
+                                    sshTransfer(
+                                        execCommand: '''
+                                        touch ~/jooooooooooooooooooopa.txt
+                                        '''
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                    echo 'deploy version ${params.VERSION}'
                 }
             }
         }
