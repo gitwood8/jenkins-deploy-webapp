@@ -16,7 +16,7 @@ pipeline {
     agent { label 'slave-1' }
         parameters {
             choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
-            booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy or not')
+            booleanParam(name: 'Deploy', defaultValue: false, description: 'Deploy or not')
         }
     environment {
         CI_IMAGE_NAME = 'web_container'
@@ -100,7 +100,7 @@ pipeline {
         stage('Run container on remote server') {
             when {
                 expression {
-                    params.RemoteDeploy
+                    params.Deploy
                 }
             }
             environment {
@@ -121,6 +121,9 @@ pipeline {
                                         sleep 20;
                                         echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa3.txt
                                         """
+                                    ),
+                                    sshTransfer(
+                                        execCommand: "echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa4.txt"
                                     )
                                 ]
                             )
