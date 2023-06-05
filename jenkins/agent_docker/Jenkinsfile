@@ -157,12 +157,12 @@ pipeline {
                 }
             }
         }
-*/
         //Cleanup local workspace
         post {
             always {
                 deleteDir()
             }
         }
+*/
     }
 }
