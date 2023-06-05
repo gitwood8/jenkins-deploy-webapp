@@ -16,7 +16,7 @@ pipeline {
     agent { label 'slave-1' }
         parameters {
             choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example')
-            booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy stage or not')
+            booleanParam(name: 'RemoteDeploy', defaultValue: false, description: 'Deploy or not')
         }
     environment {
         CI_IMAGE_NAME = 'web_container'
@@ -98,6 +98,11 @@ pipeline {
 
         // Определять дополнительные переменные нужно для конкретного стэйджа:
         stage('Run container on remote server') {
+            when {
+                expression {
+                    params.RemoteDeploy
+                }
+            }
             environment {
                 FULL_IMAGE_NAME = "${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}"
             }
@@ -115,7 +120,10 @@ pipeline {
                                         docker pull ${FULL_IMAGE_NAME};
                                         docker run -d --rm --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
                                         sleep 20;
-                                        echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt
+                                        echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt;
+                                        sleep 60;
+                                        docker ps -qa | xargs docker stop
+                                        if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi
                                         """,
                                         println("This is post testtttttttttttttttttttttttt")
                                     )
