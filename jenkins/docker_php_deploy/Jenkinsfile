@@ -122,10 +122,10 @@ pipeline {
                                         sleep 20;
                                         echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa3.txt
                                         """
-                                    ),
-                                    sshTransfer(
-                                        execCommand: 'docker ps -qa | xargs docker stop'
-                                    )
+                                    )//,
+                                 //   sshTransfer(
+                                 //       execCommand: "docker ps -qa | xargs docker stop"
+                                 //   )
                                 ]
                             )
                         ]
