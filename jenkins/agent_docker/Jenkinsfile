@@ -7,19 +7,25 @@
 #  Select "Script path" in git repo jenkins/agent_docker/Jenkinsfile                      #
 #  Configure 1 slave (EC2 Ubuntu), add ssh keys                                           #
 #  Create DockerHub token, add creds to Jenkins                                           #
-#  In jenk conf add key path to connect from master and fill key to connect from slave!   #                                                                         #
+#
+#  Check Jenkins configuration in previous projects, f.e. docker_php_deploy               #
+#  Add GitHub Webhook, properties below and  \/ "GitHub hook trigger for GITScm polling"  #
 #                                                                                         #
 #  Last update:        05.06.2023                                                         #
 #-----------------------------------------------------------------------------------------*/
 properties([pipelineTriggers([githubPush()])])
 
 pipeline {
-    agent { label 'master' }
+    agent {
+        //label 'master'
+        docker { image 'alpine:latest' }
+        }
+/*
         parameters {
-            //choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example') //as an example
+            choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example') //as an example
             booleanParam(name: 'Deploy', defaultValue: false, description: 'Deploy or not')
         }
-/****
+
     environment {
         CI_IMAGE_NAME = 'web_container'
         CI_CONTAINER_NAME = 'test_container'
