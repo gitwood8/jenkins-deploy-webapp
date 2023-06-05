@@ -125,10 +125,10 @@ pipeline {
                                         docker ps -qa | xargs docker stop
                                         """,
                                         println("This is post testtttttttttttttttttttttttt")
-                                    ),
-                                    sshTransfer( 
-                                        execCommand:'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
-                                    )
+                                    )//,
+                                    //sshTransfer(
+                                   //     execCommand:'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
+                                   // )
                                 ]
                             )
                         ]
