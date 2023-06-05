@@ -54,11 +54,9 @@ pipeline {
 
         stage('Build image') {
             steps {
-                script {
                     dir('jenkins/docker_php_deploy/docker/') {
                         docker.build("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}")
                     }
-                }
             }
         }
 
