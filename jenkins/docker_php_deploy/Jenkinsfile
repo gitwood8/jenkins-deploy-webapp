@@ -115,14 +115,14 @@ pipeline {
                                 configName: 'aws-webserver',
                                 transfers: [
                                     sshTransfer(
-                                        println("This is testtttttttttttttttttttttttt"),
+                                        println('This is testtttttttttttttttttttttttt'),
                                         execCommand: """
                                         docker pull ${FULL_IMAGE_NAME};
                                         docker run -d --rm --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
                                         sleep 20;
                                         echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt
                                         """,
-                                        println("This is post testtttttttttttttttttttttttt")
+                                        println('This is post testtttttttttttttttttttttttt')
                                     )//,
                                     //sshTransfer(
                                    //     execCommand:'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
