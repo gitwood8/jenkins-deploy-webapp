@@ -4,7 +4,7 @@
 #  Edit jenkins configuration to add remote server and ssh key                            #
 #  Its better to set "/" directory and define declaratively                               #
 #  Create new pipeline, choose SCM using https                                            #
-#  Select "Script path" in git repo jenkins/docker_php_deploy/Jenkinsfile                 #
+#  Select "Script path" in git repo jenkins/agent_docker/Jenkinsfile                      #
 #  Configure 1 slave (EC2 Ubuntu), add ssh keys                                           #
 #  Create DockerHub token, add creds to Jenkins                                           # 
 #  In jenk conf add key path to connect from master and fill key to connect from slave!   #                                                                         #
