@@ -120,9 +120,7 @@ pipeline {
                                         docker pull ${FULL_IMAGE_NAME};
                                         docker run -d --rm --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
                                         sleep 20;
-                                        echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt;
-                                        sleep 60;
-                                        docker ps -qa | xargs docker stop
+                                        echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt
                                         """,
                                         println("This is post testtttttttttttttttttttttttt")
                                     )//,
