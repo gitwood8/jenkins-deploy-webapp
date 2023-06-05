@@ -92,7 +92,6 @@ pipeline {
                 script {
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
-                    echo
                 }
             }
         }
@@ -122,10 +121,10 @@ pipeline {
                                         sleep 20;
                                         echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa3.txt
                                         """
-                                    )//,
-                                 //   sshTransfer(
-                                 //       execCommand: "docker ps -qa | xargs docker stop"
-                                 //   )
+                                    ),
+                                    sshTransfer(
+                                        execCommand: "docker ps -qa | xargs docker stop"
+                                    )
                                 ]
                             )
                         ]
