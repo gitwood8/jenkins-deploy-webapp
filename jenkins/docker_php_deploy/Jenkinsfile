@@ -73,10 +73,22 @@ pipeline {
                     sh 'docker ps -qa | xargs docker stop'
                 }
             }
+            post {
+                success {
+                    script {
+                        RunContainerTest = true
+                    }
+                }
+            }
         }
 
         // docker url: ~$docker info
         stage('Push to DockerHub') {
+            when {
+                expression {
+                    return RunContainerTest == true
+                }
+            }
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/') {
