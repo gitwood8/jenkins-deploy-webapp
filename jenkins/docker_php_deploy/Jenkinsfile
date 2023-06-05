@@ -122,7 +122,7 @@ pipeline {
                                         sleep 20;
                                         echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa2.txt;
                                         sleep 60;
-                                        docker ps -qa | xargs docker stop
+                                        docker ps -qa | xargs docker stop;
                                         if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi
                                         """,
                                         println("This is post testtttttttttttttttttttttttt")
