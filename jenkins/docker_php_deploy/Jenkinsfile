@@ -87,11 +87,12 @@ pipeline {
             }
         }
 
-        stage('Stop container and clean area') {
+        stage('Remove img and clean area') {
             steps {
                 script {
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
                     sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
+                    echo
                 }
             }
         }
@@ -108,7 +109,7 @@ pipeline {
             }
             steps {
                 script {
-//                    echo '------Run------' тут можно доп шаги добавить
+                    //                    echo '------Run------' тут можно доп шаги добавить
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
@@ -123,7 +124,7 @@ pipeline {
                                         """
                                     ),
                                     sshTransfer(
-                                        execCommand: "echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa4.txt"
+                                        execCommand: 'docker ps -qa | xargs docker stop'
                                     )
                                 ]
                             )
