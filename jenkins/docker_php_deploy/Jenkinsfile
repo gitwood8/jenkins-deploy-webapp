@@ -100,7 +100,7 @@ pipeline {
             }
         }
 
-        stage('Remove img and clean area') {
+        stage('Remove img and cleanup workspace') {
             steps {
                 script {
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
@@ -146,6 +146,12 @@ pipeline {
                         ]
                     )
                 }
+            }
+        }
+        //Cleanup local workspace
+        post {
+            always {
+                deleteDir()
             }
         }
     }

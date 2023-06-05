@@ -6,15 +6,17 @@
 #  Create new pipeline, choose SCM using https                                            #
 #  Select "Script path" in git repo jenkins/agent_docker/Jenkinsfile                      #
 #  Configure 1 slave (EC2 Ubuntu), add ssh keys                                           #
-#  Create DockerHub token, add creds to Jenkins                                           # 
+#  Create DockerHub token, add creds to Jenkins                                           #
 #  In jenk conf add key path to connect from master and fill key to connect from slave!   #                                                                         #
 #                                                                                         #
 #  Last update:        05.06.2023                                                         #
 #-----------------------------------------------------------------------------------------*/
+properties([pipelineTriggers([githubPush()])])
+
 pipeline {
-    agent { label 'slave-1' }
+    agent { label 'master' }
         parameters {
-            choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example') //as an example
+            //choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example') //as an example
             booleanParam(name: 'Deploy', defaultValue: false, description: 'Deploy or not')
         }
     environment {
@@ -54,6 +56,13 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                sh 'pwd && whoami && ls -la'
+            }
+        }
+
+/*
         stage('Build image') {
             steps {
                 script {
@@ -100,7 +109,7 @@ pipeline {
             }
         }
 
-        stage('Remove img and clean area') {
+        stage('Remove img and cleanup workspace') {
             steps {
                 script {
                     sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
@@ -121,7 +130,6 @@ pipeline {
             }
             steps {
                 script {
-                    //                    echo '------Run------' тут можно доп шаги добавить
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
@@ -146,6 +154,13 @@ pipeline {
                         ]
                     )
                 }
+            }
+        }
+*/
+        //Cleanup local workspace
+        post {
+            always {
+                deleteDir()
             }
         }
     }
