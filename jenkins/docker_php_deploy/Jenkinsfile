@@ -29,6 +29,7 @@ pipeline {
     options {
         skipDefaultCheckout()
         timestamps()
+        errorStageResultHandling = 'CURRENT_STATUS'
     }
 
     stages {
@@ -130,7 +131,7 @@ pipeline {
                                         docker pull ${FULL_IMAGE_NAME};
                                         docker run -d --rm --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
                                         echo ${FULL_IMAGE_NAME} >> ~/joooooooooooopa3.txt;
-                                        sleep 60
+                                        sleep 20
                                         """
                                     ),
                                     sshTransfer(
