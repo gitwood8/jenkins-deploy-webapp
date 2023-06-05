@@ -19,6 +19,7 @@ pipeline {
             //choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example') //as an example
             booleanParam(name: 'Deploy', defaultValue: false, description: 'Deploy or not')
         }
+/*
     environment {
         CI_IMAGE_NAME = 'web_container'
         CI_CONTAINER_NAME = 'test_container'
@@ -27,7 +28,7 @@ pipeline {
         CD_IMAGE_REPO_USER = 'wood8'
         CD_IMAGE_REPO_NAME = 'jenkins-webserver'
     }
-
+*/
     options {
         skipDefaultCheckout()
         timestamps()
