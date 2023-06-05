@@ -10,7 +10,7 @@
 #  In jenk conf add key path to connect from master and fill key to connect from slave!   #                                                                         #
 #                                                                                         #
 #  Last update:        05.06.2023                                                         #
-#-----------------------------------------------------------------------------------------  */
+#-----------------------------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
         parameters {
