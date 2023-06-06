@@ -149,10 +149,10 @@ pipeline {
             }
         }
         //Cleanup local workspace
-        post {
-            always {
-                deleteDir()
-            }
-        }
+//        post {
+//            always {
+//                deleteDir()
+//            }
+//        }
     }
 }
