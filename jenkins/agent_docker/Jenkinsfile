@@ -10,6 +10,7 @@
 #
 #  Check Jenkins configuration in previous projects, f.e. docker_php_deploy               #
 #  Add GitHub Webhook, properties below and  \/ "GitHub hook trigger for GITScm polling"  #
+#  In global jenkins confit define default git: /usr/bin/git
 #                                                                                         #
 #  Last update:        05.06.2023                                                         #
 #-----------------------------------------------------------------------------------------*/
@@ -18,8 +19,12 @@ properties([pipelineTriggers([githubPush()])])
 pipeline {
     agent {
         //label 'master'
-        docker { image 'alpine:latest' }
+        //docker { image 'alpine:latest' }
+        docker {
+            dockerfile true
+            dir 'jenkins/agent_docker/runnerd'
         }
+    }
 /*
         parameters {
             choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example') //as an example
