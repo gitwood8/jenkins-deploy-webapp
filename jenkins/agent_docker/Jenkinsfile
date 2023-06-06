@@ -45,7 +45,7 @@ pipeline {
     stages {
         stage('Delete workspace before build starts') {
             steps {
-                echo 'Deleting workspace dir'
+                echo 'Deleting Workspace dir'
                 deleteDir()
             }
         }
