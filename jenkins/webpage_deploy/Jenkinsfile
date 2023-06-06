@@ -28,14 +28,13 @@ pipeline {
                 )
             }
         }
-
+/*
         stage('Build') {
             steps {
                 dir('jenkins/webpage_deploy') {
                     sh '''
                         echo '------Build Started------'
                         hostname && pwd && whoami
-                        # && sudo chmod 777 ./*
                         ls -la
                         cat index.html
                         echo "Build by jenkins Build# $BUILD_ID" >> index.html
@@ -64,13 +63,75 @@ pipeline {
                 }
             }
         }
-
+*/
 //        stage('Sanity check') {
 //            steps {
 //                input "Does the staging environment look ok?"
 //            }
 //        }
+        stage('Build and Test') {
+            steps {
+                dir('jenkins/webpage_deploy') {
+                    sh '''
+                        echo '------Build Started------'
+                        hostname && pwd && whoami
+                        ls -la
+                        cat index.html
+                        echo "Build by Jenkins Build# $BUILD_ID" >> index.html
+                        cat index.html
+                        echo '------Build Finished------'
+        
+                        echo '------Test Started------'
+                        result=$(grep "Hello" index.html | wc -l)
+                        echo $result
+                        if [ "$result" = "1" ]; then
+                            echo "Test passed"
+                        else
+                            echo "Test failed"
+                            exit 1
+                        fi
+                        echo '------Test Finished------'
+                    '''
+                }
+            }
+        }
 
+
+        stage('Transfer files and Restart webserver') {
+            agent {
+                label 'master'
+            }
+            steps {
+                dir('jenkins/webpage_deploy') {
+                    echo '------Starting publish over SSH------'
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
+                                transfers: [
+                                    sshTransfer(
+                                        flatten: false,
+                                        remoteDirectory: '/var/www/html',
+                                        sourceFiles: 'index.html'
+                                    )
+                                ]
+                            ),
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
+                                transfers: [
+                                    sshTransfer(
+                                        execCommand: 'sudo systemctl restart httpd'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                    echo '------Finished publish over SSH and restarted webserver------'
+                }
+            }
+        }
+
+/*
         stage('Transfer files') {
             agent { label 'master' }
             steps {
@@ -116,5 +177,6 @@ pipeline {
                 echo '------Webserver restarted------'
             }
         }
+*/
     }
 }
