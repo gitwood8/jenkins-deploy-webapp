@@ -68,7 +68,7 @@ pipeline {
             }
         }
 
-        stage('Test 111') {
+        stage('Test 222') {
             steps {
                 sh 'pwd && whoami && ls -la'
             }
