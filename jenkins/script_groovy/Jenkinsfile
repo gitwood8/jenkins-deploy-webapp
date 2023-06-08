@@ -39,7 +39,7 @@ pipeline {
                 deleteDir()
             }
         }
-/*
+
         // Без этого степа создаются директории но не скачиваются файлы
         stage('Checkout git') {
             steps {
@@ -52,7 +52,7 @@ pipeline {
                 }
             }
         }
-*/
+
         stage('Init') {
             steps {
                 script {
