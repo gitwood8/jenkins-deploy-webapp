@@ -52,7 +52,7 @@ pipeline {
                 }
             }
         }
-
+//можно как отдельными стейджами так и в одном (load and gscr.test)
         stage('Init and test') {
             steps {
                 script {
@@ -64,14 +64,5 @@ pipeline {
                 }
             }
         }
-/*
-        stage('Test') {
-            steps {
-                script {
-                    
-                }
-            }
-        }
-*/
     }
 }
