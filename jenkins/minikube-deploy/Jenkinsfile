@@ -1,0 +1,158 @@
+/*----------------------------------------------------------------------------------------#
+#  Jenkins running on remote EC2 AWS Ubuntu instance, remote webserver EC2 AWS Linux      #
+#  Plugins:SSH, Docker Pipeline, Amazon ECR, Parameterized Trigger plugin, Git parameter  #
+#  Edit jenkins configuration to add remote server and ssh key                            #
+#  Its better to set "/" directory and define declaratively                               #
+#  Create new pipeline, choose SCM using https                                            #
+#  Select "Script path" in git repo jenkins/docker_php_deploy/Jenkinsfile                 #
+#  Configure 1 slave (EC2 Ubuntu), add ssh keys                                           #
+#  Create DockerHub token, add creds to Jenkins                                           # 
+#  In jenk conf add key path to connect from master and fill key to connect from slave!   #                                                                         #
+#                                                                                         #
+#  Last update:        05.06.2023                                                         #
+#-----------------------------------------------------------------------------------------  */
+pipeline {
+    agent { label 'slave-1' }
+        parameters {
+            choice(name: 'VERSION', choices: ['1', '2'], description: 'Version example') //as an example
+            booleanParam(name: 'Deploy', defaultValue: false, description: 'Deploy or not')
+        }
+    environment {
+        CI_IMAGE_NAME = 'web_container'
+        CI_CONTAINER_NAME = 'test_container'
+        CONTAINER_EXTERNAL_PORT = '8080'
+
+        CD_IMAGE_REPO_USER = 'wood8'
+        CD_IMAGE_REPO_NAME = 'jenkins-webserver'
+    }
+
+    options {
+        skipDefaultCheckout()
+        timestamps()
+        disableConcurrentBuilds()
+        skipStagesAfterUnstable() //Skip stages once the build status has gone to UNSTABLE
+    }
+
+    stages {
+        stage('Delete workspace before build starts') {
+            steps {
+                echo 'Deleting workspace dir'
+                deleteDir()
+            }
+        }
+
+        // Без этого степа создаются директории но не скачиваются файлы
+        stage('Checkout git') {
+            steps {
+                script {
+                    git(
+                        url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
+                        branch: 'main'
+                    )
+                    env.GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=5 HEAD').trim()
+                }
+            }
+        }
+
+        stage('Build image') {
+            steps {
+                script {
+                    dir('jenkins/docker_php_deploy/docker/') {
+                        docker.build("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}")
+                    }
+                }
+            }
+        }
+
+        stage('Run container test') {
+            steps {
+                script {
+                    def dockerImage = docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}")
+                    dockerImage.run("-d --rm --name ${env.CI_CONTAINER_NAME} -p ${env.CONTAINER_EXTERNAL_PORT}:80")
+                    sleep 20
+                    sh "docker inspect --format='{{json .State.Health}}' \$(docker ps -q) | grep '\"Status\":\"healthy\"'"
+                    //docker.stop() - not permited
+                    sh 'docker ps -qa | xargs docker stop'
+                }
+            }
+            post {
+                success {
+                    script {
+                        RunContainerTest = true
+                    }
+                }
+            }
+        }
+
+        // docker url: ~$docker info
+        stage('Push to DockerHub') {
+            when {
+                expression {
+                    return RunContainerTest == true
+                }
+            }
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'dockerhub-cred-jenkins-wood8', url: 'https://index.docker.io/v1/') {
+                        docker.image("${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}").push()
+                    }
+                }
+            }
+        }
+
+        stage('Remove img and cleanup workspace') {
+            steps {
+                script {
+                    sh 'docker images -qa | xargs docker rmi 2>/dev/null --force || true'
+                    sh 'if [ \$(docker images -qa | wc -l) = "0" ]; then echo "Success"; else echo "Vse ploho"; fi'
+                }
+            }
+        }
+
+        // Определять дополнительные переменные нужно для конкретного стэйджа:
+        stage('Run container on remote server') {
+            when {
+                expression {
+                    params.Deploy
+                }
+            }
+            environment {
+                FULL_IMAGE_NAME = "${CD_IMAGE_REPO_USER}/${CD_IMAGE_REPO_NAME}:${env.GIT_COMMIT}"
+            }
+            steps {
+                script {
+                    //                    echo '------Run------' тут можно доп шаги добавить
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'aws-webserver',
+                                transfers: [
+                                    sshTransfer(
+                                        execCommand: """
+                                        docker pull ${FULL_IMAGE_NAME};
+                                        docker run -d --rm --name ${CI_CONTAINER_NAME} -p ${CONTAINER_EXTERNAL_PORT}:80 ${FULL_IMAGE_NAME};
+                                        echo ${FULL_IMAGE_NAME} >> ~/check_point.txt;
+                                        sleep 20
+                                        """
+                                    ),
+                                    sshTransfer(
+                                        execCommand: '''
+                                        docker ps -qa | xargs docker stop;
+                                        docker images -qa | xargs docker rmi 2>/dev/null --force || true
+                                        '''
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
+            }
+        }
+        //Cleanup local workspace
+//        post {
+//            always {
+//                deleteDir()
+//            }
+//        }
+    }
+}
