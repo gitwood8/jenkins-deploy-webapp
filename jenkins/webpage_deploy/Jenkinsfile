@@ -6,7 +6,7 @@
 #  Create new pipeline, choose SCM using https                           #
 #  Select "Script path" in git repo /jenkins/webpage_deploy/Jenkinsfile  #
 #                                                                        #
-#  Update date:        31.05.2023                                        #
+#  Update date:        08.06.2023                                        #
 #-----------------------------------------------------------------------*/
 pipeline {
     agent { label 'slave-1' }
@@ -18,7 +18,6 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            agent { label 'master' }
             steps {
                 git(
                     url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
@@ -28,47 +27,7 @@ pipeline {
                 )
             }
         }
-/*
-        stage('Build') {
-            steps {
-                dir('jenkins/webpage_deploy') {
-                    sh '''
-                        echo '------Build Started------'
-                        hostname && pwd && whoami
-                        ls -la
-                        cat index.html
-                        echo "Build by jenkins Build# $BUILD_ID" >> index.html
-                        cat index.html
-                        echo '------Build Finished------'
-                    '''
-                }
-            }
-        }
 
-        stage('Test') {
-            steps {
-                dir('jenkins/webpage_deploy') {
-                    sh '''
-                        echo '------Test Started------'
-                        result=$(grep "Hello" index.html | wc -l)
-                        echo $result
-                        if [ "$result" = "1" ]; then
-                            echo "Test passed"
-                        else
-                            echo "Test failed"
-                            exit 1
-                        fi
-                        echo '------Test Finished------'
-                    '''
-                }
-            }
-        }
-*/
-//        stage('Sanity check') {
-//            steps {
-//                input "Does the staging environment look ok?"
-//            }
-//        }
         stage('Build and Test') {
             steps {
                 dir('jenkins/webpage_deploy') {
@@ -80,7 +39,7 @@ pipeline {
                         echo "Build by Jenkins Build# $BUILD_ID" >> index.html
                         cat index.html
                         echo '------Build Finished------'
-        
+
                         echo '------Test Started------'
                         result=$(grep "Hello" index.html | wc -l)
                         echo $result
@@ -96,74 +55,21 @@ pipeline {
             }
         }
 
-
         stage('Transfer files and Restart webserver') {
-            agent {
-                label 'master'
-            }
             steps {
-                dir('jenkins/webpage_deploy') {
-                    echo '------Starting publish over SSH------'
-                    sshPublisher(
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'aws-webserver',
-                                transfers: [
-                                    sshTransfer(
-                                        flatten: false,
-                                        remoteDirectory: '/var/www/html',
-                                        sourceFiles: 'index.html'
-                                    )
-                                ]
-                            ),
-                            sshPublisherDesc(
-                                configName: 'aws-webserver',
-                                transfers: [
-                                    sshTransfer(
-                                        execCommand: 'sudo systemctl restart httpd'
-                                    )
-                                ]
-                            )
-                        ]
-                    )
-                    echo '------Finished publish over SSH and restarted webserver------'
-                }
-            }
-        }
-
-/*
-        stage('Transfer files') {
-            agent { label 'master' }
-            steps {
-                dir('jenkins/webpage_deploy') {
-                    echo '------Starting publish over SSH------'
-                    sshPublisher(
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'aws-webserver',
-                                transfers: [
-                                    sshTransfer(
-                                        flatten: false,
-                                        remoteDirectory: '/var/www/html',
-                                        sourceFiles: 'index.html'
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        )
-                    echo '------Finished publish over SSH------'
-                }
-            }
-        }
-
-        stage('Restart webserver') {
-            agent { label 'master' }
-            steps {
-                echo '------Restart webserver------'
+                echo '------Starting publish over SSH------'
                 sshPublisher(
-                    //continueOnError: true,
-                    //failOnError: true,
                     publishers: [
+                        sshPublisherDesc(
+                            configName: 'aws-webserver',
+                            transfers: [
+                                sshTransfer(
+                                    flatten: false,
+                                    remoteDirectory: '/var/www/html',
+                                    sourceFiles: 'index.html'
+                                )
+                            ]
+                        ),
                         sshPublisherDesc(
                             configName: 'aws-webserver',
                             transfers: [
@@ -174,9 +80,8 @@ pipeline {
                         )
                     ]
                 )
-                echo '------Webserver restarted------'
+                echo '------Finished publish over SSH and restarted webserver------'
             }
         }
-*/
     }
 }

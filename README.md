@@ -1,4 +1,5 @@
 # jenkins-deploy-app
-Application for my jenkins
+Jenkins pipelines:
 
-Jenkins pipeline
+1. webpage_deploy:
+index.html is a common html page and Jenkinsfile that deploy that static page to remote webserver.
