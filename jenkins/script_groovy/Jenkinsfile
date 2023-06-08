@@ -53,10 +53,18 @@ pipeline {
             }
         }
 */
-        stage('Test 777') {
+        stage('Init') {
             steps {
                 script {
-                    gscr = load "script.groovy"
+                    gscr = load 'script.groovy'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    gscr.testApp()
                 }
             }
         }
