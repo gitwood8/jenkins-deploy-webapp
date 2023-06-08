@@ -1,0 +1,64 @@
+/*----------------------------------------------------------------------------------------#
+#  Jenkins running on remote EC2 AWS Ubuntu instance, remote webserver EC2 AWS Linux      #
+#  Plugins:SSH, Docker Pipeline, Amazon ECR, Parameterized Trigger plugin, Git parameter  #
+#  Edit jenkins configuration to add remote server and ssh key                            #
+#  Its better to set "/" directory and define declaratively                               #
+#  Create new pipeline, choose SCM using https                                            #
+#  Select "Script path" in git repo jenkins/agent_docker/Jenkinsfile                      #
+#  Configure 1 slave (EC2 Ubuntu), add ssh keys                                           #
+#  Create DockerHub token, add creds to Jenkins                                           #
+#
+#  Check Jenkins configuration in previous projects, f.e. docker_php_deploy               #
+#  Add GitHub Webhook, properties below and  \/ "GitHub hook trigger for GITScm polling"  #
+#  In global jenkins confit define default git: /usr/bin/git
+
+#  Checking groovy external dcript
+#                                                                                         #
+#  Last update:        08.06.2023                                                         #
+#-----------------------------------------------------------------------------------------*/
+//properties([pipelineTriggers([githubPush()])])
+
+def gscr
+
+pipeline {
+    agent {
+        label 'master'
+    }
+
+    options {
+        skipDefaultCheckout()
+        timestamps()
+        disableConcurrentBuilds()
+        skipStagesAfterUnstable() //Skip stages once the build status has gone to UNSTABLE
+    }
+
+    stages {
+        stage('Delete workspace before build starts') {
+            steps {
+                echo 'Deleting Workspace dir'
+                deleteDir()
+            }
+        }
+/*
+        // Без этого степа создаются директории но не скачиваются файлы
+        stage('Checkout git') {
+            steps {
+                script {
+                    git(
+                        url: 'https://github.com/gitwood8/jenkins-deploy-webapp.git',
+                        branch: 'main'
+                    )
+                    env.GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short=5 HEAD').trim()
+                }
+            }
+        }
+*/
+        stage('Test 777') {
+            steps {
+                script {
+                    gscr = load "script.groovy"
+                }
+            }
+        }
+    }
+}
