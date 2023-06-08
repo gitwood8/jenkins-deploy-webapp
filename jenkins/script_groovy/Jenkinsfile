@@ -53,23 +53,25 @@ pipeline {
             }
         }
 
-        stage('Init') {
+        stage('Init and test') {
             steps {
                 script {
                     dir('jenkins/script_groovy/') {
                         sh 'ls -la && pwd'
                         gscr = load 'script.groovy'
+                        gscr.testApp()
                     }
                 }
             }
         }
-
+/*
         stage('Test') {
             steps {
                 script {
-                    gscr.testApp()
+                    
                 }
             }
         }
+*/
     }
 }
