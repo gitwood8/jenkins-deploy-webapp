@@ -57,6 +57,7 @@ pipeline {
             steps {
                 script {
                     dir('jenkins/script_groovy/') {
+                        sh 'ls -la && pwd'
                         gscr = load 'script.groovy'
                     }
                 }
